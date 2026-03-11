@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CardIQ — India's Credit Card Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   CARDIQ PRO — DESIGN SYSTEM
+   Dark Fintech + Gen-Z  |  Syne (display) + DM Sans (body)
+   Palette: deep navy bg, electric blue accent, emerald green, soft gold
+   ===================================================================== */
+:root{
+  --bg:#060a14;--bg2:#090e1c;--bg3:#0c1220;
+  --s1:#111b2e;--s2:#162038;--s3:#1b2642;--s4:#212e4e;
+  --b1:rgba(255,255,255,.055);--b2:rgba(255,255,255,.1);--b3:rgba(255,255,255,.15);
+  --t1:#eef1fa;--t2:#7f90b2;--t3:#3e4f70;
+  --blue:#4c8eff;--blue2:#7aaeff;--blue3:rgba(76,142,255,.12);
+  --em:#00d4a0;--em2:#00ffbd;--em3:rgba(0,212,160,.1);
+  --red:#ff4560;--orange:#ff9f43;--yellow:#ffd32a;
+  --pu:#b16dff;--cy:#22d3ee;--pk:#ff6baa;
+  --gold:#d4a84b;--gold2:#f4c870;
+  --sh:0 4px 24px rgba(0,0,0,.55);--sh2:0 16px 48px rgba(0,0,0,.65);
+  --glow:0 0 40px rgba(76,142,255,.18);--glow-g:0 0 40px rgba(0,212,160,.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);overflow-x:hidden;line-height:1.6;font-size:15px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--s4);border-radius:2px}
+button,input,select,textarea{font-family:'DM Sans',sans-serif}
+
+/* KEYFRAMES */
+@keyframes fUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes shimmer{from{background-position:-200% 0}to{background-position:200% 0}}
+@keyframes gradPan{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes floatCard{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-9px) rotate(var(--r,0deg))}}
+@keyframes scanLine{0%{top:-20%}100%{top:120%}}
+@keyframes spinZ{to{transform:rotate(360deg)}}
+
+/* PAGE SYSTEM */
+.page{display:none;padding-top:58px;min-height:100vh}
+.page.on{display:block;animation:fUp .38s ease}
+.w{max-width:1300px;margin:0 auto;padding:0 22px}
+.sec{padding:60px 0}
+
+/* =========================================
+   NAV
+   ========================================= */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:9000;height:58px;
+  background:rgba(6,10,20,.93);backdrop-filter:blur(28px) saturate(200%);
+  border-bottom:1px solid var(--b1);
+  display:flex;align-items:center;padding:0 16px;gap:4px;
+}
+.logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:-.03em;
+  background:linear-gradient(135deg,#fff 0%,var(--blue2) 45%,var(--em) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  cursor:pointer;flex-shrink:0;margin-right:8px;
+}
+.nav-links{display:flex;gap:1px;overflow-x:auto;flex:1;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nl{padding:6px 10px;border-radius:7px;font-size:.71rem;font-weight:600;color:var(--t2);background:none;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nl:hover{color:var(--t1);background:var(--s1)}
+.nl.on{color:var(--blue2);background:rgba(76,142,255,.1);font-weight:700}
+.nav-r{display:flex;gap:7px;align-items:center;flex-shrink:0;margin-left:auto}
+.nav-search-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--s1);border:1px solid var(--b2);border-radius:8px;color:var(--t2);font-size:.71rem;font-weight:600;cursor:pointer;transition:all .2s}
+.nav-search-btn:hover{border-color:var(--blue);color:var(--t1)}
+.nav-cta{padding:8px 16px;background:var(--blue);border:none;border-radius:8px;color:#fff;font-size:.71rem;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.01em}
+.nav-cta:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:var(--glow)}
+
+/* =========================================
+   SEARCH OVERLAY
+   ========================================= */
+.so{position:fixed;inset:0;z-index:99000;background:rgba(6,10,20,.97);backdrop-filter:blur(24px);display:none;flex-direction:column;align-items:center;padding:62px 22px 22px}
+.so.on{display:flex;animation:fIn .2s ease}
+.so-x{position:absolute;top:14px;right:18px;background:var(--s2);border:1px solid var(--b2);color:var(--t2);padding:6px 14px;border-radius:7px;cursor:pointer;font-size:.7rem;transition:all .18s}
+.so-x:hover{border-color:var(--blue);color:var(--t1)}
+.so-bar{width:100%;max-width:680px;background:var(--s1);border:1.5px solid var(--b2);border-radius:13px;display:flex;align-items:center;padding:0 16px;gap:10px;margin-bottom:6px;transition:border-color .2s}
+.so-bar:focus-within{border-color:var(--blue);box-shadow:var(--glow)}
+.so-inp{flex:1;background:none;border:none;outline:none;color:var(--t1);font-size:1.05rem;padding:16px 0;font-family:'DM Sans',sans-serif}
+.so-inp::placeholder{color:var(--t3)}
+.so-hint{font-size:.69rem;color:var(--t3);width:100%;max-width:680px;margin-bottom:18px}
+.so-tags{display:flex;gap:6px;flex-wrap:wrap;width:100%;max-width:680px;margin-bottom:14px}
+.so-tag{padding:5px 12px;background:var(--s2);border:1px solid var(--b2);border-radius:20px;font-size:.67rem;font-weight:600;color:var(--t2);cursor:pointer;transition:all .15s}
+.so-tag:hover{border-color:var(--blue);color:var(--blue2)}
+.so-res{width:100%;max-width:680px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;max-height:60vh}
+.so-item{background:var(--s1);border:1px solid var(--b2);border-radius:11px;padding:13px 16px;display:grid;grid-template-columns:42px 1fr auto auto;gap:12px;align-items:center;cursor:pointer;transition:all .18s}
+.so-item:hover{border-color:var(--blue);background:var(--s2)}
+.so-av{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;color:#fff;flex-shrink:0}
+.so-nm{font-weight:700;font-size:.88rem;margin-bottom:2px;line-height:1.2}
+.so-bk{font-size:.66rem;color:var(--t2)}
+.so-meta{text-align:right;font-size:.68rem;color:var(--t2)}
+.so-meta strong{display:block;font-family:'Syne',sans-serif;color:var(--em);font-size:.86rem;font-weight:700}
+.so-score{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--em));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.7rem;color:#fff;flex-shrink:0}
+
+/* =========================================
+   HERO
+   ========================================= */
+.hero{min-height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;padding:0 22px}
+.hero-bg{position:absolute;inset:0}
+.hb-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 100% 70% at 20% 50%,rgba(76,142,255,.07) 0%,transparent 60%),radial-gradient(ellipse 70% 60% at 80% 30%,rgba(0,212,160,.06) 0%,transparent 55%),radial-gradient(ellipse 50% 50% at 50% 90%,rgba(177,109,255,.05) 0%,transparent 50%)}
+.hb-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 20%,transparent 80%)}
+.hb-scan{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hb-scan::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(76,142,255,.35),transparent);animation:scanLine 9s linear infinite}
+.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 380px;gap:50px;align-items:center;max-width:1300px;margin:0 auto;width:100%;padding:100px 0 80px}
+.h-eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(0,212,160,.08);border:1px solid rgba(0,212,160,.2);border-radius:50px;padding:5px 13px;font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--em);margin-bottom:22px}
+.h-eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--em);animation:pulse 2s infinite}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.8rem,5.8vw,5.6rem);font-weight:800;line-height:.96;letter-spacing:-.04em;margin-bottom:18px}
+.hero h1 .gr{background:linear-gradient(135deg,#fff 0%,var(--blue2) 30%,var(--em) 65%,var(--gold2) 100%);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradPan 5s ease infinite}
+.h-sub{font-size:.98rem;color:var(--t2);line-height:1.76;max-width:440px;margin-bottom:30px}
+/* hero search */
+.h-srch{position:relative;max-width:500px;margin-bottom:30px}
+.h-srch input{width:100%;padding:15px 110px 15px 18px;background:var(--s1);border:1.5px solid var(--b2);border-radius:11px;color:var(--t1);font-size:.92rem;outline:none;transition:all .22s;cursor:pointer}
+.h-srch input:focus{border-color:var(--blue);box-shadow:var(--glow)}
+.h-srch .go{position:absolute;right:5px;top:50%;transform:translateY(-50%);background:var(--blue);border:none;border-radius:8px;padding:9px 16px;color:#fff;font-weight:700;font-size:.74rem;cursor:pointer;transition:all .2s}
+.h-srch .go:hover{background:var(--blue2);transform:translateY(-51%)}
+/* stats */
+.h-stats{display:flex;gap:30px;flex-wrap:wrap}
+.hst-n{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--blue2),var(--em));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.hst-l{font-size:.66rem;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+/* floating cards */
+.hero-cards{position:relative;height:360px}
+.fc{position:absolute;width:242px;height:148px;border-radius:15px;padding:17px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.fc:nth-child(1){top:0;right:8px;--r:-5deg;animation:floatCard 4.5s ease-in-out infinite;transform:rotate(-5deg);z-index:3}
+.fc:nth-child(2){top:76px;right:52px;--r:3deg;animation:floatCard 4.5s ease-in-out infinite .7s;transform:rotate(3deg);z-index:2}
+.fc:nth-child(3){top:164px;right:4px;--r:-2deg;animation:floatCard 4.5s ease-in-out infinite 1.4s;transform:rotate(-2deg);z-index:1}
+.fc-chip{width:28px;height:20px;background:linear-gradient(135deg,#d4a843,#f4c86a);border-radius:4px}
+.fc-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.77rem;color:rgba(255,255,255,.9)}
+.fc-num{font-family:'JetBrains Mono',monospace;font-size:.57rem;color:rgba(255,255,255,.38);letter-spacing:.2em}
+
+/* =========================================
+   SECTION HEADERS
+   ========================================= */
+.s-eye{font-size:.63rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--blue2);display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.s-eye::before{content:'';width:16px;height:1.5px;background:var(--blue)}
+.s-title{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,2.8vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin-bottom:8px;line-height:1.1}
+.s-sub{font-size:.88rem;color:var(--t2);max-width:480px;line-height:1.72;margin-bottom:38px}
+
+/* =========================================
+   ALERT BANNER
+   ========================================= */
+.alert-strip{background:rgba(255,69,96,.06);border-top:1px solid rgba(255,69,96,.18);border-bottom:1px solid rgba(255,69,96,.18);padding:10px 22px;display:flex;align-items:center;gap:12px;overflow:hidden}
+.as-label{font-size:.67rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red);flex-shrink:0}
+.as-scroll{display:flex;gap:0;overflow-x:auto;flex:1;scrollbar-width:none}
+.as-scroll::-webkit-scrollbar{display:none}
+.as-item{font-size:.74rem;color:var(--t2);white-space:nowrap;padding:0 14px;border-right:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:6px;cursor:pointer}
+.as-item:hover{color:var(--t1)}
+.as-item:last-child{border-right:none}
+
+/* =========================================
+   QUICK NAV LINKS
+   ========================================= */
+.quick-links{display:flex;gap:8px;overflow-x:auto;padding:16px 0;scrollbar-width:none}
+.quick-links::-webkit-scrollbar{display:none}
+.ql{display:flex;align-items:center;gap:6px;padding:7px 15px;background:var(--s1);border:1px solid var(--b2);border-radius:9px;font-size:.72rem;font-weight:600;color:var(--t2);cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0}
+.ql:hover{border-color:var(--blue);color:var(--t1);background:var(--s2)}
+.ql.gold-ql{border-color:rgba(212,168,75,.3);color:var(--gold)}
+.ql.green-ql{border-color:rgba(0,212,160,.3);color:var(--em)}
+
+/* =========================================
+   CARD GRID ITEMS
+   ========================================= */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(282px,1fr));gap:12px}
+.cc{background:var(--s1);border:1px solid var(--b1);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .24s,box-shadow .24s,border-color .24s;position:relative}
+.cc:hover{transform:translateY(-4px);box-shadow:var(--sh2),var(--glow);border-color:rgba(76,142,255,.35)}
+.cc-top{height:124px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:13px}
+.cc-bg{position:absolute;inset:0;background-size:200%;animation:gradPan 10s ease infinite}
+.cc-shadow{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45) 0%,transparent 55%)}
+.cc-b1{position:absolute;top:9px;right:9px;z-index:2;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);padding:2px 8px;border-radius:50px;font-size:.56rem;font-weight:800;color:#fff}
+.cc-ltf-b{background:rgba(0,212,160,.25);border-color:rgba(0,212,160,.4);color:var(--em2)}
+.cc-change-b{background:rgba(255,69,96,.22);border-color:rgba(255,69,96,.38);color:#ffaab8}
+.cc-vis{position:relative;z-index:1;width:104px;height:63px;border-radius:8px;background:rgba(255,255,255,.09);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.16);padding:8px;display:flex;flex-direction:column;justify-content:space-between}
+.cv-chip{width:16px;height:12px;background:linear-gradient(135deg,#d4a843,#f4c86a);border-radius:3px}
+.cv-num{font-family:'JetBrains Mono',monospace;font-size:.37rem;color:rgba(255,255,255,.48);letter-spacing:.1em}
+.cc-body{padding:13px}
+.cc-bank{font-size:.57rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:4px}
+.cc-name{font-family:'Syne',sans-serif;font-size:.93rem;font-weight:700;margin-bottom:3px;line-height:1.2}
+.cc-desc{font-size:.67rem;color:var(--t2);margin-bottom:10px;line-height:1.4}
+/* tags */
+.tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:10px}
+.tg{font-size:.54rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid}
+.tg-travel{background:rgba(34,211,238,.07);color:var(--cy);border-color:rgba(34,211,238,.18)}
+.tg-cashback{background:rgba(0,212,160,.07);color:var(--em);border-color:rgba(0,212,160,.18)}
+.tg-premium{background:rgba(212,168,75,.07);color:var(--gold);border-color:rgba(212,168,75,.18)}
+.tg-lounge{background:rgba(76,142,255,.07);color:var(--blue2);border-color:rgba(76,142,255,.18)}
+.tg-ltf{background:rgba(0,212,160,.12);color:var(--em2);border-color:rgba(0,212,160,.28)}
+.tg-miles{background:rgba(177,109,255,.07);color:var(--pu);border-color:rgba(177,109,255,.18)}
+.tg-cobrand{background:rgba(255,159,67,.07);color:var(--orange);border-color:rgba(255,159,67,.18)}
+.tg-fuel{background:rgba(255,69,96,.07);color:var(--red);border-color:rgba(255,69,96,.15)}
+.tg-lifestyle{background:rgba(255,107,170,.07);color:var(--pk);border-color:rgba(255,107,170,.15)}
+.tg-digital{background:rgba(177,109,255,.07);color:var(--pu);border-color:rgba(177,109,255,.18)}
+/* metrics */
+.cc-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:10px}
+.ccm{background:var(--bg2);border-radius:7px;padding:8px 5px;text-align:center}
+.ccm-v{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;line-height:1}
+.ccm-k{font-size:.52rem;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-top:3px}
+/* footer */
+.cc-foot{display:flex;align-items:center;justify-content:space-between}
+/* Score ring */
+.sr{position:relative;width:34px;height:34px;flex-shrink:0}
+.sr svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.sr-bg{fill:none;stroke:var(--s4);stroke-width:4}
+.sr-fi{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .9s ease}
+.sr-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;font-family:'Syne',sans-serif}
+.sc-lbl{font-size:.57rem;color:var(--t3);line-height:1.1}
+.sc-val{font-size:.71rem;font-weight:700;color:var(--t1)}
+.cc-arr{font-size:.7rem;font-weight:700;color:var(--blue2);transition:all .18s}
+.cc:hover .cc-arr{letter-spacing:.03em}
+
+/* =========================================
+   FILTERS
+   ========================================= */
+.filters{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:14px 17px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.fl{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);white-space:nowrap}
+.fc-btn{padding:5px 11px;background:var(--bg2);border:1px solid var(--b1);border-radius:7px;font-size:.69rem;font-weight:600;color:var(--t2);cursor:pointer;transition:all .16s}
+.fc-btn:hover{border-color:var(--blue);color:var(--t1)}
+.fc-btn.on{background:rgba(76,142,255,.1);border-color:var(--blue);color:var(--blue2);font-weight:700}
+.fc-sel{padding:7px 11px;background:var(--bg2);border:1px solid var(--b1);border-radius:7px;font-size:.69rem;font-weight:600;color:var(--t2);cursor:pointer;-webkit-appearance:none;min-width:128px;outline:none}
+.fc-sel:focus{border-color:var(--blue)}
+
+/* =========================================
+   CARD DETAIL
+   ========================================= */
+.cd-hero{background:var(--bg2);border-bottom:1px solid var(--b1);padding:38px 0 0}
+.cd-grid{display:grid;grid-template-columns:1fr 310px;gap:38px;align-items:start;max-width:1300px;margin:0 auto;padding:0 22px}
+.back-btn{display:inline-flex;align-items:center;gap:5px;color:var(--t2);font-size:.74rem;background:none;border:none;cursor:pointer;margin-bottom:17px;transition:color .18s;padding:0}
+.back-btn:hover{color:var(--blue2)}
+.cd-bank-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.cd-bank-label{font-size:.61rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.cd-name{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3.5vw,3.2rem);font-weight:800;letter-spacing:-.04em;margin-bottom:10px;line-height:1.05}
+.cd-desc{font-size:.87rem;color:var(--t2);line-height:1.72;max-width:460px;margin-bottom:20px}
+.cd-nets{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px}
+.net-tag{font-size:.63rem;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(76,142,255,.08);color:var(--blue2);border:1px solid rgba(76,142,255,.2)}
+.cd-fees{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:24px}
+.fee-pill{background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:11px 16px;text-align:center}
+.fp-v{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;line-height:1}
+.fp-k{font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-top:3px}
+.cd-btns{display:flex;gap:8px;flex-wrap:wrap}
+/* score panel */
+.sc-panel{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:19px;position:sticky;top:68px}
+.sc-top{display:flex;align-items:center;gap:13px;margin-bottom:15px;padding-bottom:15px;border-bottom:1px solid var(--b1)}
+.sc-ring-big{width:58px;height:58px;position:relative;flex-shrink:0}
+.sc-ring-big svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.scrb-bg{fill:none;stroke:var(--s3);stroke-width:5}
+.scrb-fi{fill:none;stroke-width:5;stroke-linecap:round}
+.sc-ring-big .n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:900}
+.sc-bars{display:flex;flex-direction:column;gap:8px}
+.scb-row{display:flex;align-items:center;gap:9px}
+.scb-l{font-size:.66rem;color:var(--t2);width:100px;flex-shrink:0}
+.scb-track{flex:1;height:4px;background:var(--s3);border-radius:2px;overflow:hidden}
+.scb-fill{height:100%;border-radius:2px;transition:width .9s ease}
+.scb-v{font-size:.66rem;font-weight:700;width:20px;text-align:right}
+/* tabs */
+.cd-tabs{display:flex;border-bottom:1px solid var(--b1);padding:0 22px;background:var(--bg2);overflow-x:auto;scrollbar-width:none}
+.cd-tabs::-webkit-scrollbar{display:none}
+.cdt{padding:12px 14px;font-size:.71rem;font-weight:700;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;color:var(--t2);white-space:nowrap;transition:all .18s}
+.cdt:hover{color:var(--t1)}
+.cdt.on{color:var(--blue2);border-bottom-color:var(--blue)}
+.cd-pane{display:none;padding:24px 22px;max-width:1300px;margin:0 auto}
+.cd-pane.on{display:block;animation:fUp .3s ease}
+/* info grid */
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:8px;margin:14px 0}
+.igi{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px}
+.igi-k{font-size:.57rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:4px}
+.igi-v{font-family:'Syne',sans-serif;font-weight:600;font-size:.84rem;line-height:1.3}
+/* benefit grid */
+.bg{display:grid;grid-template-columns:repeat(auto-fill,minmax(218px,1fr));gap:10px}
+.bc{background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:15px;transition:border-color .18s}
+.bc:hover{border-color:rgba(76,142,255,.3)}
+.bc-i{font-size:1.55rem;margin-bottom:8px}
+.bc-t{font-weight:700;font-size:.84rem;margin-bottom:4px}
+.bc-b{font-size:.74rem;color:var(--t2);line-height:1.58}
+/* earn table */
+.etbl{width:100%;border-collapse:collapse;font-size:.79rem;margin:12px 0}
+.etbl th{background:var(--s2);padding:9px 12px;text-align:left;font-size:.59rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1)}
+.etbl td{padding:10px 12px;border-bottom:1px solid var(--b1);vertical-align:middle}
+.etbl tr:last-child td{border-bottom:none}
+.etbl tr:hover td{background:rgba(255,255,255,.015)}
+/* pros/cons */
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pros,.cons{border-radius:11px;padding:15px;border:1px solid}
+.pros{background:rgba(0,212,160,.04);border-color:rgba(0,212,160,.18)}
+.cons{background:rgba(255,69,96,.04);border-color:rgba(255,69,96,.18)}
+.pros h3,.cons h3{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:11px}
+.pros h3{color:var(--em)}.cons h3{color:var(--red)}
+.pi{font-size:.79rem;display:flex;gap:7px;margin-bottom:7px;line-height:1.5}
+.pi.p::before{content:'+';color:var(--em);font-weight:800;flex-shrink:0}
+.pi.c::before{content:'−';color:var(--red);font-weight:800;flex-shrink:0}
+/* spend ratings */
+.spg{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:8px;margin:14px 0}
+.spc{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:12px;text-align:center}
+.spic{font-size:1.15rem;margin-bottom:5px}
+.spcat{font-size:.56rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:4px}
+.spval{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;line-height:1}
+.spbar{height:3px;background:var(--s3);border-radius:2px;margin-top:7px;overflow:hidden}
+.spfill{height:100%;border-radius:2px}
+/* eligibility */
+.elg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.elgc{background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:15px}
+.elgt{font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--b1)}
+.elgr{display:flex;gap:8px;margin-bottom:8px;font-size:.78rem}
+.elgk{color:var(--t3);width:82px;flex-shrink:0;font-size:.72rem}
+.elgv{font-weight:600}
+.elg-note{font-size:.7rem;color:var(--t2);background:var(--bg2);border-radius:7px;padding:8px 10px;margin-top:8px;line-height:1.6}
+/* vpp grid */
+.vpp-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:9px;margin:14px 0}
+.vpp-c{background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:15px;text-align:center;transition:all .2s}
+.vpp-c.best{border-color:rgba(0,212,160,.3);background:rgba(0,212,160,.04)}
+.vpp-method{font-size:.7rem;color:var(--t2);margin-bottom:7px}
+.vpp-amt{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:900;color:var(--em);line-height:1}
+.vpp-per{font-size:.65rem;color:var(--t3);margin-top:2px}
+.vpp-rec{font-size:.58rem;font-weight:700;color:var(--em);background:rgba(0,212,160,.1);padding:2px 7px;border-radius:4px;display:inline-block;margin-top:5px}
+/* tips */
+.tip{background:rgba(76,142,255,.06);border:1px solid rgba(76,142,255,.18);border-radius:10px;padding:14px;display:flex;gap:11px;margin:12px 0}
+.tip-i{font-size:1.05rem;flex-shrink:0}
+.tip-t{font-size:.79rem;color:var(--t2);line-height:1.65}
+.warn{background:rgba(255,159,67,.06);border:1px solid rgba(255,159,67,.2);border-radius:10px;padding:14px;display:flex;gap:11px;margin:12px 0}
+.deval{background:rgba(255,69,96,.06);border:1px solid rgba(255,69,96,.2);border-radius:10px;padding:14px;display:flex;gap:11px;margin:12px 0}
+/* transfer table */
+.tp-tbl{width:100%;border-collapse:collapse;font-size:.78rem}
+.tp-tbl th{background:var(--s2);padding:9px 12px;text-align:left;font-size:.59rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1)}
+.tp-tbl td{padding:10px 12px;border-bottom:1px solid var(--b1)}
+.ratio{color:var(--em);font-weight:800;font-family:'Syne',sans-serif;font-size:.84rem}
+/* excl tags */
+.xtag{display:inline-block;background:rgba(255,69,96,.08);border:1px solid rgba(255,69,96,.2);color:var(--red);font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:4px;margin:2px}
+.itag{display:inline-block;background:rgba(0,212,160,.08);border:1px solid rgba(0,212,160,.2);color:var(--em);font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:4px;margin:2px}
+
+/* =========================================
+   COMPARE
+   ========================================= */
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.78rem;min-width:780px}
+.cmp-tbl th{background:var(--s2);padding:11px 12px;text-align:left;font-size:.59rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);white-space:nowrap}
+.cmp-tbl td{padding:10px 12px;border-bottom:1px solid var(--b1);vertical-align:middle}
+.cmp-tbl tr:hover td{background:rgba(255,255,255,.015)}
+.cmp-tbl tr:last-child td{border-bottom:none}
+.tbl-sc{width:29px;height:29px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--em));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.68rem;color:#fff}
+.cg-t{color:var(--em);font-weight:700}.co-t{color:var(--orange);font-weight:600}.cr-t{color:var(--red)}.cgold-t{color:var(--gold);font-weight:700}
+
+/* =========================================
+   LOUNGE FINDER
+   ========================================= */
+.lounge-item{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:16px;margin-bottom:8px;transition:border-color .18s}
+.lounge-item:hover{border-color:rgba(76,142,255,.3)}
+.li-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.li-name{font-weight:700;font-size:.87rem}
+.li-bank{font-size:.64rem;color:var(--t3);margin-top:2px}
+.li-badges{display:flex;gap:5px;flex-wrap:wrap}
+.lbdg{padding:3px 8px;border-radius:6px;font-size:.61rem;font-weight:700;border:1px solid}
+.lb-d{background:rgba(0,212,160,.07);color:var(--em);border-color:rgba(0,212,160,.18)}
+.lb-i{background:rgba(34,211,238,.07);color:var(--cy);border-color:rgba(34,211,238,.18)}
+.lb-r{background:rgba(212,168,75,.07);color:var(--gold);border-color:rgba(212,168,75,.18)}
+.lb-pp{background:rgba(76,142,255,.07);color:var(--blue2);border-color:rgba(76,142,255,.18)}
+.li-warn{font-size:.67rem;color:var(--orange);margin-top:6px;display:flex;align-items:center;gap:5px}
+
+/* =========================================
+   RECOMMENDER
+   ========================================= */
+.rtool{background:var(--s1);border:1px solid var(--b1);border-radius:18px;padding:28px;max-width:840px;margin:0 auto}
+.rt-title{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;letter-spacing:-.03em;margin-bottom:4px}
+.rt-sub{font-size:.82rem;color:var(--t2);margin-bottom:22px;line-height:1.65}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg-full{grid-column:1/-1}
+.fl-l{font-size:.65rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--t3);display:block;margin-bottom:5px}
+.fi,.fsi{width:100%;padding:11px 13px;background:var(--bg2);border:1.5px solid var(--b1);border-radius:9px;color:var(--t1);font-size:.84rem;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.fi:focus,.fsi:focus{border-color:var(--blue);box-shadow:var(--glow)}
+.rw{display:flex;align-items:center;gap:12px}
+.rw input[type=range]{flex:1;accent-color:var(--blue)}
+.rv{font-family:'Syne',sans-serif;font-weight:800;color:var(--blue2);min-width:80px;text-align:right;font-size:.9rem}
+.spend-rows{display:flex;flex-direction:column;gap:11px;margin-bottom:22px}
+.sr-row{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center}
+.sr-lbl{font-size:.79rem;display:flex;align-items:center;gap:7px}
+.sub-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),#1d4ed8);border:none;border-radius:11px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.93rem;font-weight:700;cursor:pointer;margin-top:17px;transition:all .2s;letter-spacing:.02em}
+.sub-btn:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+/* rec result cards */
+.rcard{background:var(--bg2);border:1px solid var(--b1);border-radius:15px;padding:21px;margin-bottom:13px;position:relative;overflow:hidden;transition:border-color .2s}
+.rcard:hover{border-color:rgba(76,142,255,.3)}
+.rcard-rank{position:absolute;top:17px;right:17px;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--em));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.98rem;font-weight:900;color:#fff}
+.rcard-name{font-family:'Syne',sans-serif;font-size:1.18rem;font-weight:800;letter-spacing:-.02em;margin-bottom:2px}
+.rcard-bank{font-size:.69rem;color:var(--t3);margin-bottom:13px}
+.match-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px}
+.mtag{font-size:.61rem;font-weight:700;padding:3px 8px;border-radius:5px;background:rgba(0,212,160,.08);color:var(--em);border:1px solid rgba(0,212,160,.18)}
+.ev-box{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;background:var(--s1);border-radius:10px;padding:13px;margin-bottom:13px}
+.ev-v{font-family:'Syne',sans-serif;font-size:1.02rem;font-weight:800;color:var(--em);line-height:1}
+.ev-v.neg{color:var(--red)}
+.ev-k{font-size:.57rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-top:3px}
+
+/* =========================================
+   DASHBOARD
+   ========================================= */
+.dash-wrap{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - 58px)}
+.dash-sb{background:var(--bg2);border-right:1px solid var(--b1);padding:17px 12px;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;scrollbar-width:none}
+.dash-sb::-webkit-scrollbar{display:none}
+.du{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--b1)}
+.du-av{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--em));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:#fff;flex-shrink:0}
+.du-n{font-weight:700;font-size:.81rem;line-height:1.2}
+.du-s{font-size:.63rem;color:var(--t3);margin-top:2px}
+.dsn{display:flex;flex-direction:column;gap:2px}
+.dsbtn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;font-size:.75rem;font-weight:600;color:var(--t2);background:none;border:none;cursor:pointer;transition:all .16s;text-align:left}
+.dsbtn:hover{background:var(--s1);color:var(--t1)}
+.dsbtn.on{background:rgba(76,142,255,.1);color:var(--blue2);font-weight:700}
+.dsi{font-size:.88rem;width:16px;text-align:center}
+.dash-main{padding:24px;overflow-y:auto}
+.dsec{display:none}
+.dsec.on{display:block;animation:fUp .3s ease}
+.dsh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.dsh h2{font-family:'Syne',sans-serif;font-size:1.38rem;font-weight:800;letter-spacing:-.03em}
+/* stat cards */
+.stat-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:20px}
+.stc{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:17px;transition:border-color .18s}
+.stc:hover{border-color:rgba(76,142,255,.3)}
+.stc-i{font-size:1.35rem;margin-bottom:8px}
+.stc-v{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:900;margin-bottom:3px;line-height:1}
+.stc-l{font-size:.61rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3)}
+/* my cards grid */
+.mc-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(256px,1fr));gap:12px}
+.mcrd{background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden;transition:all .24s}
+.mcrd:hover{border-color:rgba(76,142,255,.3);transform:translateY(-2px);box-shadow:var(--glow)}
+.mc-vis{height:138px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;position:relative}
+.mc-chip{width:25px;height:18px;background:linear-gradient(135deg,#d4a843,#f4c86a);border-radius:3px}
+.mc-num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:rgba(255,255,255,.65);letter-spacing:.2em}
+.mc-bot{display:flex;justify-content:space-between;align-items:flex-end}
+.mc-cn{font-family:'Syne',sans-serif;font-weight:700;font-size:.76rem;color:rgba(255,255,255,.9)}
+.mc-bk{font-size:.59rem;color:rgba(255,255,255,.48)}
+.mc-body{padding:12px}
+.mc-util{display:flex;justify-content:space-between;font-size:.67rem;margin-bottom:5px}
+.mc-bar{height:3px;background:var(--s3);border-radius:2px;overflow:hidden;margin-bottom:10px}
+.mc-bfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--em))}
+.mc-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.mc-stat{background:var(--bg2);border-radius:6px;padding:8px;text-align:center}
+.mc-sv{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700}
+.mc-sk{font-size:.52rem;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-top:2px}
+.add-mc{background:var(--s1);border:2px dashed var(--b2);border-radius:14px;padding:26px;text-align:center;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:165px;justify-content:center}
+.add-mc:hover{border-color:var(--blue);background:rgba(76,142,255,.04)}
+.add-mc .ico{font-size:1.7rem;opacity:.3}
+/* reward meters */
+.rm-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px;margin-bottom:17px}
+.rmtr{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:16px;text-align:center}
+.rm-ring{width:86px;height:86px;position:relative;margin:0 auto 10px;display:flex;align-items:center;justify-content:center}
+.rm-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.rmr-bg{fill:none;stroke:var(--s3);stroke-width:7}
+.rmr-fi{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .9s}
+.rmr-v{position:relative;z-index:1;font-family:'Syne',sans-serif;font-size:1.02rem;font-weight:900}
+.rm-lbl{font-size:.63rem;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:3px}
+.rm-cn{font-size:.68rem;font-weight:600;color:var(--t2)}
+/* bills */
+.bill-l{display:flex;flex-direction:column;gap:8px}
+.bill{background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:12px;display:grid;grid-template-columns:34px 1fr auto auto;gap:12px;align-items:center;transition:border-color .18s}
+.bill:hover{border-color:var(--b2)}
+.bill.urg{border-color:rgba(255,69,96,.3);background:rgba(255,69,96,.04)}
+.bi-ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.bi-n{font-weight:700;font-size:.81rem}
+.bi-d{font-size:.63rem;color:var(--t3);margin-top:2px}
+.bi-amt{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:700;text-align:right}
+.bi-days{font-size:.62rem;color:var(--t3);text-align:right;margin-top:2px}
+.bi-days.urg{color:var(--red);font-weight:700}
+.pay-btn{padding:6px 12px;background:var(--blue);border:none;border-radius:7px;color:#fff;font-size:.66rem;font-weight:700;cursor:pointer;transition:all .18s}
+.pay-btn:hover{background:var(--blue2)}
+/* charts */
+.ch-box{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:17px}
+.ch-t{font-family:'Syne',sans-serif;font-size:.93rem;font-weight:700;margin-bottom:2px}
+.ch-s{font-size:.68rem;color:var(--t3);margin-bottom:16px}
+.bar-ch{display:flex;align-items:flex-end;gap:7px;height:145px;padding-bottom:17px;position:relative}
+.bar-ch::before{content:'';position:absolute;left:0;right:0;bottom:17px;top:0;background-image:repeating-linear-gradient(transparent,transparent calc(33% - 1px),rgba(255,255,255,.04) calc(33% - 1px),rgba(255,255,255,.04) 33%)}
+.bw{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.bf{width:100%;border-radius:5px 5px 0 0;min-height:3px;position:relative}
+.bf:hover::after{content:attr(data-v);position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:var(--s2);border:1px solid var(--b2);padding:2px 7px;border-radius:4px;font-size:.61rem;white-space:nowrap}
+.bl{font-size:.54rem;text-transform:uppercase;letter-spacing:.06em;color:var(--t3)}
+/* insights */
+.insight{background:var(--s1);border:1px solid var(--b1);border-left:3px solid var(--blue);border-radius:10px;padding:13px;margin-bottom:10px}
+.in-h{font-weight:700;font-size:.84rem;margin-bottom:5px}
+.in-b{font-size:.76rem;color:var(--t2);line-height:1.7}
+
+/* =========================================
+   EDUCATION HUB
+   ========================================= */
+.edu-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:12px}
+.edu-c{background:var(--s1);border:1px solid var(--b1);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .24s}
+.edu-c:hover{border-color:rgba(76,142,255,.3);transform:translateY(-3px);box-shadow:var(--sh2)}
+.edu-top{height:110px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;position:relative;overflow:hidden}
+.edu-body{padding:16px}
+.edu-tag{font-size:.59rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);margin-bottom:6px}
+.edu-title{font-family:'Syne',sans-serif;font-size:1.02rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+.edu-desc{font-size:.75rem;color:var(--t2);line-height:1.6}
+.edu-art{max-width:760px;margin:0 auto;padding:40px 22px;display:none}
+.edu-art.on{display:block;animation:fUp .3s ease}
+.edu-art h2{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;letter-spacing:-.04em;margin-bottom:7px}
+.edu-art p{font-size:.87rem;color:var(--t2);line-height:1.82;margin-bottom:13px}
+.edu-art h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:8px;margin-top:22px;letter-spacing:-.02em}
+.edu-art ul{margin:0 0 13px 17px}
+.edu-art li{font-size:.85rem;color:var(--t2);line-height:1.72;margin-bottom:5px}
+.edu-art table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.78rem}
+.edu-art table th{background:var(--s2);padding:8px 12px;text-align:left;color:var(--t3);font-size:.63rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--b1)}
+.edu-art table td{padding:9px 12px;border-bottom:1px solid var(--b1)}
+
+/* =========================================
+   MARKET INTELLIGENCE
+   ========================================= */
+.mi-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(282px,1fr));gap:12px}
+.mi-c{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:19px;border-top:3px solid}
+.mi-ico{font-size:2.1rem;margin-bottom:11px}
+.mi-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+.mi-body{font-size:.76rem;color:var(--t2);line-height:1.7}
+.deval-i{background:var(--s1);border:1px solid;border-radius:11px;padding:15px;margin-bottom:8px}
+.di-bad{border-color:rgba(255,69,96,.25);background:rgba(255,69,96,.04)}
+.di-good{border-color:rgba(0,212,160,.25);background:rgba(0,212,160,.04)}
+.di-neut{border-color:rgba(76,142,255,.2)}
+.d-badge{display:inline-flex;align-items:center;gap:5px;font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:9px}
+.db-bad{background:rgba(255,69,96,.1);color:var(--red)}
+.db-good{background:rgba(0,212,160,.1);color:var(--em)}
+.db-neut{background:rgba(76,142,255,.1);color:var(--blue2)}
+.d-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:5px}
+.d-desc{font-size:.77rem;color:var(--t2);line-height:1.65}
+.d-date{font-size:.62rem;color:var(--t3);margin-top:7px;font-weight:600}
+
+/* =========================================
+   TRANSFER PARTNERS
+   ========================================= */
+.tp-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:12px}
+.tp-c{background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:17px}
+.tp-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.tp-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem}
+.tp-prog{font-size:.66rem;color:var(--t3);margin-top:2px}
+.tp-vpm{background:rgba(0,212,160,.1);border:1px solid rgba(0,212,160,.2);border-radius:7px;padding:5px 10px;text-align:center}
+.tp-vpm-n{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--em);font-weight:700}
+.tp-vpm-l{font-size:.55rem;color:var(--t3)}
+.tp-best{font-size:.73rem;color:var(--t2);margin-bottom:10px;line-height:1.5}
+.tp-redeem{background:var(--bg2);border-radius:8px;padding:10px;margin-bottom:10px;font-size:.72rem}
+.tp-redeem-r{font-weight:700;margin-bottom:3px}
+.tp-redeem-d{color:var(--t2)}
+.tp-ratio-list{font-size:.66rem;color:var(--t3);margin-bottom:5px}
+.tp-ratio-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--b1);font-size:.71rem}
+
+/* =========================================
+   PORTFOLIO OPTIMIZER
+   ========================================= */
+.po-item{background:var(--s1);border-left:3px solid var(--blue);border-radius:10px;padding:14px;margin-bottom:10px}
+
+/* =========================================
+   MODALS
+   ========================================= */
+.modal-ov{position:fixed;inset:0;z-index:99000;background:rgba(6,10,20,.88);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:22px}
+.modal-ov.on{display:flex}
+.modal{background:var(--s1);border:1px solid var(--b2);border-radius:17px;padding:26px;max-width:510px;width:100%;animation:fUp .24s ease}
+.modal-t{font-family:'Syne',sans-serif;font-size:1.28rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+.modal-s{font-size:.78rem;color:var(--t2);margin-bottom:20px}
+.modal-x{float:right;background:none;border:none;color:var(--t2);font-size:1.1rem;cursor:pointer;transition:color .18s;padding:4px}
+.modal-x:hover{color:var(--t1)}
+.btn-row{display:flex;gap:8px;margin-top:17px}
+
+/* =========================================
+   BUTTONS UTIL
+   ========================================= */
+.btn-pr{padding:10px 19px;background:var(--blue);border:none;border-radius:9px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-pr:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:var(--glow)}
+.btn-se{padding:10px 19px;background:var(--s2);border:1px solid var(--b2);border-radius:9px;color:var(--t2);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-se:hover{border-color:var(--blue);color:var(--t1)}
+.btn-sm{padding:8px 15px;font-size:.72rem}
+
+/* =========================================
+   UTILITY
+   ========================================= */
+.divider{height:1px;background:var(--b1);margin:20px 0}
+.empty{text-align:center;padding:52px 20px}
+.empty-i{font-size:2.6rem;margin-bottom:13px;opacity:.3}
+.empty-t{font-family:'Syne',sans-serif;font-size:1.08rem;font-weight:700;margin-bottom:6px}
+.empty-s{font-size:.78rem;color:var(--t3);line-height:1.6}
+.badge-ltf{background:rgba(0,212,160,.15);color:var(--em2);border:1px solid rgba(0,212,160,.3);font-size:.56rem;font-weight:800;padding:2px 6px;border-radius:4px}
+.badge-hot{background:var(--red);color:#fff;font-size:.56rem;font-weight:800;padding:2px 6px;border-radius:4px}
+.tbl-wrap{overflow-x:auto}
+.countdown{font-size:.67rem;color:var(--red);font-weight:700;margin-top:4px}
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr}
+  .hero-cards{display:none}
+  .cd-grid{grid-template-columns:1fr}
+  .fg,.pc,.elg{grid-template-columns:1fr}
+  .ev-box{grid-template-columns:1fr 1fr}
+  .dash-wrap{grid-template-columns:1fr}
+  .dash-sb{position:relative;height:auto;top:0}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="logo" onclick="go('home')">CardIQ</div>
+  <div class="nav-links">
+    <button class="nl on" onclick="go('home')" id="nb-home">Home</button>
+    <button class="nl" onclick="go('cards')" id="nb-cards">All Cards</button>
+    <button class="nl" onclick="go('compare')" id="nb-compare">Compare</button>
+    <button class="nl" onclick="go('lounge')" id="nb-lounge">Lounge Finder</button>
+    <button class="nl" onclick="go('rec')" id="nb-rec">Recommender</button>
+    <button class="nl" onclick="go('transfer')" id="nb-transfer">Transfer Partners</button>
+    <button class="nl" onclick="go('edu')" id="nb-edu">Learn</button>
+    <button class="nl" onclick="go('market')" id="nb-market">Market Intel</button>
+  </div>
+  <div class="nav-r">
+    <div class="nav-search-btn" onclick="openSearch()">🔍 Search</div>
+    <button class="nav-cta" onclick="go('dashboard')">My Dashboard</button>
+  </div>
+</nav>
+
+<!-- ===== SEARCH OVERLAY ===== -->
+<div class="so" id="so">
+  <div class="so-x" onclick="closeSo()">ESC ✕</div>
+  <div class="so-bar">
+    <span style="color:var(--t3);font-size:1.05rem">🔍</span>
+    <input class="so-inp" id="so-inp" placeholder="Search card name, bank, benefit, category…" oninput="doSearch(this.value)" autocomplete="off">
+  </div>
+  <div class="so-hint">Try: "HDFC Infinia" · "Axis Magnus" · "SBI Cashback" · "IDFC Wealth" · "lounge" · "cashback" · "travel" · "ltf"</div>
+  <div class="so-tags">
+    <div class="so-tag" onclick="doSearch('premium')">💎 Premium</div>
+    <div class="so-tag" onclick="doSearch('cashback')">💰 Cashback</div>
+    <div class="so-tag" onclick="doSearch('travel')">✈️ Travel</div>
+    <div class="so-tag" onclick="doSearch('ltf')">🆓 Lifetime Free</div>
+    <div class="so-tag" onclick="doSearch('lounge')">🛋️ Lounge</div>
+    <div class="so-tag" onclick="doSearch('fuel')">⛽ Fuel</div>
+    <div class="so-tag" onclick="doSearch('miles')">🌍 Miles</div>
+    <div class="so-tag" onclick="doSearch('forex')">💱 Forex</div>
+  </div>
+  <div class="so-res" id="so-res"></div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div id="page-home" class="page on">
+  <div class="hero">
+    <div class="hero-bg">
+      <div class="hb-mesh"></div>
+      <div class="hb-grid"></div>
+      <div class="hb-scan"></div>
+    </div>
+    <div class="hero-inner">
+      <div>
+        <div class="h-eyebrow"><div class="dot"></div>India's #1 Credit Card Intelligence Platform</div>
+        <h1>Every Swipe.<br><span class="gr">Maximum Value.</span></h1>
+        <p class="h-sub">AI-powered analysis of 60+ Indian credit cards across 7 banks. Find your perfect card, compare benefits, optimize rewards, and manage your portfolio intelligently.</p>
+        <div class="h-srch">
+          <input placeholder="Search HDFC Infinia, SBI Cashback, IDFC Wealth…" onclick="openSearch()" readonly>
+          <button class="go" onclick="openSearch()">Search →</button>
+        </div>
+        <div class="h-stats">
+          <div><div class="hst-n">60+</div><div class="hst-l">Cards Analyzed</div></div>
+          <div><div class="hst-n">7</div><div class="hst-l">Banks Covered</div></div>
+          <div><div class="hst-n">40+</div><div class="hst-l">Data Points</div></div>
+          <div><div class="hst-n">100%</div><div class="hst-l">Unbiased</div></div>
+        </div>
+      </div>
+      <div class="hero-cards">
+        <div class="fc" style="background:linear-gradient(135deg,#1a1a2e,#0f3460)">
+          <div class="fc-chip"></div>
+          <div><div class="fc-name">HDFC Infinia Metal</div><div class="fc-num">•••• •••• •••• 4821</div></div>
+        </div>
+        <div class="fc" style="background:linear-gradient(135deg,#1a0000,#8b0000)">
+          <div class="fc-chip"></div>
+          <div><div class="fc-name">Axis Magnus</div><div class="fc-num">•••• •••• •••• 9034</div></div>
+        </div>
+        <div class="fc" style="background:linear-gradient(135deg,#003087,#c0392b)">
+          <div class="fc-chip"></div>
+          <div><div class="fc-name">SBI Card Elite</div><div class="fc-num">•••• •••• •••• 1567</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert strip -->
+  <div class="alert-strip">
+    <span class="as-label">⚡ Updates</span>
+    <div class="as-scroll">
+      <div class="as-item" onclick="go('market')">⚠️ BOB LTF ends March 31 2026</div>
+      <div class="as-item" onclick="go('market')">⚠️ IDFC Railway Lounge: ₹20K/month</div>
+      <div class="as-item" onclick="go('market')">⚠️ SBI Lounge cut to 4/year</div>
+      <div class="as-item" onclick="go('market')">⚠️ SBI Redemption blocks from Apr 2026</div>
+      <div class="as-item" onclick="go('market')">⚠️ Amex Fuel MR removed</div>
+      <div class="as-item" onclick="go('market')">⚠️ ICICI ₹20K/month reward cap</div>
+      <div class="as-item" onclick="go('market')">⚠️ HDFC Tata Neu: ₹50K/quarter lounge</div>
+    </div>
+  </div>
+
+  <!-- Quick links -->
+  <div class="w">
+    <div class="quick-links">
+      <div class="ql gold-ql" onclick="filterGo('ltf')">🆓 Lifetime Free Cards</div>
+      <div class="ql" onclick="filterGo('premium')">💎 Premium Cards</div>
+      <div class="ql" onclick="filterGo('travel')">✈️ Best Travel</div>
+      <div class="ql" onclick="filterGo('cashback')">💰 Best Cashback</div>
+      <div class="ql" onclick="filterGo('miles')">🌍 Air Miles</div>
+      <div class="ql" onclick="filterGo('lounge')">🛋️ Best Lounge</div>
+      <div class="ql" onclick="filterGo('fuel')">⛽ Fuel Cards</div>
+      <div class="ql green-ql" onclick="go('lounge')">🗺 Lounge Finder</div>
+      <div class="ql" onclick="go('transfer')">🔄 Transfer Partners</div>
+      <div class="ql" onclick="go('rec')">🤖 Find My Card</div>
+    </div>
+  </div>
+
+  <!-- Featured -->
+  <div class="w sec" style="padding-top:28px">
+    <div class="s-eye">Top Rated</div>
+    <div class="s-title">Best Cards Right Now</div>
+    <p class="s-sub">Highest-scoring cards by our 8-factor rating model. Updated for 2025–26.</p>
+    <div class="cg" id="home-grid"></div>
+    <div style="text-align:center;margin-top:20px">
+      <button class="btn-se" onclick="go('cards')" style="padding:11px 24px;font-size:.8rem">View All 60+ Cards →</button>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div style="background:var(--bg2);border-top:1px solid var(--b1);border-bottom:1px solid var(--b1);padding:56px 0">
+    <div class="w">
+      <div class="s-eye" style="justify-content:center">Browse by Goal</div>
+      <div class="s-title" style="text-align:center;margin-bottom:32px">What Are You Optimizing For?</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px">
+        <div onclick="filterGo('travel')" style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:20px;text-align:center;cursor:pointer;transition:all .22s" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--b1)'"><div style="font-size:1.9rem;margin-bottom:8px">✈️</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;margin-bottom:3px">Best Travel</div><div style="font-size:.66rem;color:var(--t3)">Air miles & perks</div></div>
+        <div onclick="filterGo('cashback')" style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:20px;text-align:center;cursor:pointer;transition:all .22s" onmouseover="this.style.borderColor='var(--em)'" onmouseout="this.style.borderColor='var(--b1)'"><div style="font-size:1.9rem;margin-bottom:8px">💰</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;margin-bottom:3px">Best Cashback</div><div style="font-size:.66rem;color:var(--t3)">Money back on spends</div></div>
+        <div onclick="filterGo('premium')" style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:20px;text-align:center;cursor:pointer;transition:all .22s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--b1)'"><div style="font-size:1.9rem;margin-bottom:8px">💎</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;margin-bottom:3px">Premium Cards</div><div style="font-size:.66rem;color:var(--t3)">Luxury benefits</div></div>
+        <div onclick="filterGo('ltf')" style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:20px;text-align:center;cursor:pointer;transition:all .22s" onmouseover="this.style.borderColor='var(--em)'" onmouseout="this.style.borderColor='var(--b1)'"><div style="font-size:1.9rem;margin-bottom:8px">🆓</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;margin-bottom:3px">Lifetime Free</div><div style="font-size:.66rem;color:var(--t3)">Zero annual fee</div></div>
+        <div onclick="filterGo('fuel')" style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:20px;text-align:center;cursor:pointer;transition:all .22s" onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='var(--b1)'"><div style="font-size:1.9rem;margin-bottom:8px">⛽</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;margin-bottom:3px">Fuel Cards</div><div style="font-size:.66rem;color:var(--t3)">Max fuel rewards</div></div>
+        <div onclick="filterGo('miles')" style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:20px;text-align:center;cursor:pointer;transition:all .22s" onmouseover="this.style.borderColor='var(--pu)'" onmouseout="this.style.borderColor='var(--b1)'"><div style="font-size:1.9rem;margin-bottom:8px">🌍</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.86rem;margin-bottom:3px">Air Miles</div><div style="font-size:.66rem;color:var(--t3)">Business class</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ALL CARDS ===== -->
+<div id="page-cards" class="page">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:38px 22px 0">
+    <div class="w">
+      <div class="s-eye">Complete Database</div>
+      <div class="s-title" style="margin-bottom:6px">All Credit Cards</div>
+      <p style="font-size:.84rem;color:var(--t2);margin-bottom:20px">60+ cards · 7 banks · Salaried & Self-Employed eligibility · Multiple networks</p>
+    </div>
+  </div>
+  <div class="w" style="padding-top:24px">
+    <div class="filters" id="card-filters">
+      <span class="fl">Bank:</span>
+      <button class="fc-btn on" onclick="applyF('bank','all',this)">All</button>
+      <button class="fc-btn" onclick="applyF('bank','HDFC Bank',this)">HDFC</button>
+      <button class="fc-btn" onclick="applyF('bank','ICICI Bank',this)">ICICI</button>
+      <button class="fc-btn" onclick="applyF('bank','SBI Card',this)">SBI</button>
+      <button class="fc-btn" onclick="applyF('bank','Axis Bank',this)">Axis</button>
+      <button class="fc-btn" onclick="applyF('bank','American Express India',this)">Amex</button>
+      <button class="fc-btn" onclick="applyF('bank','IDFC FIRST Bank',this)">IDFC FIRST</button>
+      <button class="fc-btn" onclick="applyF('bank','Bank of Baroda',this)">BOB</button>
+      <button class="fc-btn" onclick="applyF('bank','HSBC India',this)">HSBC</button>
+      <span class="fl" style="margin-left:6px">Type:</span>
+      <button class="fc-btn" onclick="applyF('cat','travel',this)">✈️ Travel</button>
+      <button class="fc-btn" onclick="applyF('cat','cashback',this)">💰 Cashback</button>
+      <button class="fc-btn" onclick="applyF('cat','premium',this)">💎 Premium</button>
+      <button class="fc-btn" onclick="applyF('cat','miles',this)">🌍 Miles</button>
+      <button class="fc-btn" onclick="applyF('cat','ltf',this)">🆓 LTF</button>
+      <button class="fc-btn" onclick="applyF('cat','lounge',this)">🛋️ Lounge</button>
+      <button class="fc-btn" onclick="applyF('cat','fuel',this)">⛽ Fuel</button>
+      <select class="fc-sel" onchange="applyFee(this.value)" style="margin-left:6px">
+        <option value="all">Any Fee</option>
+        <option value="0">Free (₹0)</option>
+        <option value="1000">Under ₹1K</option>
+        <option value="5000">Under ₹5K</option>
+        <option value="15000">Under ₹15K</option>
+      </select>
+      <select class="fc-sel" onchange="applySpend(this.value)">
+        <option value="all">Any Purpose</option>
+        <option value="online">Online Shopping</option>
+        <option value="dining">Dining</option>
+        <option value="travel">Travel</option>
+        <option value="fuel">Fuel</option>
+        <option value="forex">Forex / International</option>
+        <option value="edu">Education</option>
+      </select>
+      <select class="fc-sel" onchange="applyTier(this.value)">
+        <option value="all">Any Tier</option>
+        <option value="super-premium">Super Premium</option>
+        <option value="premium">Premium</option>
+        <option value="mid">Mid-Range</option>
+        <option value="entry">Entry Level</option>
+      </select>
+    </div>
+    <div style="font-size:.74rem;color:var(--t3);margin-bottom:13px" id="cards-count"></div>
+    <div class="cg" id="all-cards-grid"></div>
+  </div>
+</div>
+
+<!-- ===== CARD DETAIL ===== -->
+<div id="page-detail" class="page">
+  <div id="detail-root"></div>
+</div>
+
+<!-- ===== COMPARE ===== -->
+<div id="page-compare" class="page">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:38px 22px">
+    <div class="w"><div class="s-eye">Side-by-Side</div><div class="s-title" style="margin-bottom:6px">Compare Cards</div><p style="font-size:.84rem;color:var(--t2)">Select up to 3 cards for a detailed feature comparison.</p></div>
+  </div>
+  <div class="w" style="padding:26px 22px">
+    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:17px;margin-bottom:20px;display:flex;gap:13px;align-items:center;flex-wrap:wrap">
+      <span class="fl">Select:</span>
+      <select class="fc-sel" id="cmp1" style="flex:1;min-width:190px"><option value="">— Card 1 —</option></select>
+      <select class="fc-sel" id="cmp2" style="flex:1;min-width:190px"><option value="">— Card 2 —</option></select>
+      <select class="fc-sel" id="cmp3" style="flex:1;min-width:190px"><option value="">— Card 3 (optional) —</option></select>
+      <button onclick="runCompare()" class="btn-pr">Compare</button>
+    </div>
+    <div id="cmp-out"></div>
+  </div>
+</div>
+
+<!-- ===== LOUNGE FINDER ===== -->
+<div id="page-lounge" class="page">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:38px 22px">
+    <div class="w"><div class="s-eye">Lounge Intelligence</div><div class="s-title" style="margin-bottom:6px">Airport Lounge Access Finder</div><p style="font-size:.84rem;color:var(--t2)">Find lounge access, spend conditions, and Priority Pass info for every card.</p></div>
+  </div>
+  <div class="w" style="padding:24px 22px">
+    <div class="deval-i di-bad" style="margin-bottom:16px">
+      <div class="d-badge db-bad">⚠️ 2024–25 Devaluations</div>
+      <div class="d-desc">BOB Eterna/Premier: ₹40K/quarter · BOB Select: ₹20K/quarter · IDFC Railway: ₹20K/month · SBI Elite: 8→4 visits · HDFC Tata Neu: ₹50K/quarter</div>
+    </div>
+    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:16px;margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+      <select class="fc-sel" id="lc-card" style="flex:1;min-width:190px"><option value="all">All Cards</option></select>
+      <select class="fc-sel" id="lc-type" onchange="renderLounge()">
+        <option value="all">All Lounge Types</option>
+        <option value="unlimited">Unlimited Access</option>
+        <option value="domestic">Domestic Lounge</option>
+        <option value="intl">International Lounge</option>
+        <option value="railway">Railway Lounge</option>
+        <option value="pp">Priority Pass Cards</option>
+      </select>
+      <select class="fc-sel" id="lc-bank" onchange="renderLounge()">
+        <option value="all">All Banks</option>
+        <option value="HDFC Bank">HDFC</option>
+        <option value="ICICI Bank">ICICI</option>
+        <option value="Axis Bank">Axis</option>
+        <option value="SBI Card">SBI</option>
+        <option value="American Express India">Amex</option>
+        <option value="IDFC FIRST Bank">IDFC FIRST</option>
+        <option value="Bank of Baroda">BOB</option>
+        <option value="HSBC India">HSBC</option>
+      </select>
+      <button onclick="renderLounge()" class="btn-pr btn-sm">Search</button>
+    </div>
+    <div id="lounge-out"></div>
+  </div>
+</div>
+
+<!-- ===== RECOMMENDER ===== -->
+<div id="page-rec" class="page">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:38px 22px">
+    <div class="w"><div class="s-eye">AI-Powered</div><div class="s-title" style="margin-bottom:6px">Find Your Perfect Card</div><p style="font-size:.84rem;color:var(--t2)">Enter your spending profile. Get top 3 personalized recommendations with projected annual reward values.</p></div>
+  </div>
+  <div style="padding:40px 22px">
+    <div class="rtool">
+      <div class="rt-title">Your Spending Profile</div>
+      <p class="rt-sub">Drag sliders to match your actual monthly spending. The engine calculates which cards give you maximum value based on your pattern.</p>
+      <div class="s-eye" style="font-size:.59rem;margin-bottom:13px">Monthly Spending Breakdown</div>
+      <div class="spend-rows">
+        <div class="sr-row"><div class="sr-lbl"><span>🛒</span>Online Shopping</div><div class="rw"><input type="range" min="0" max="50000" step="1000" value="10000" id="s-online" oninput="upd('s-online','sv-online')"><span class="rv" id="sv-online">₹10,000</span></div></div>
+        <div class="sr-row"><div class="sr-lbl"><span>🍔</span>Dining & Food</div><div class="rw"><input type="range" min="0" max="30000" step="500" value="5000" id="s-dining" oninput="upd('s-dining','sv-dining')"><span class="rv" id="sv-dining">₹5,000</span></div></div>
+        <div class="sr-row"><div class="sr-lbl"><span>✈️</span>Travel</div><div class="rw"><input type="range" min="0" max="100000" step="2000" value="15000" id="s-travel" oninput="upd('s-travel','sv-travel')"><span class="rv" id="sv-travel">₹15,000</span></div></div>
+        <div class="sr-row"><div class="sr-lbl"><span>⛽</span>Fuel</div><div class="rw"><input type="range" min="0" max="20000" step="500" value="3000" id="s-fuel" oninput="upd('s-fuel','sv-fuel')"><span class="rv" id="sv-fuel">₹3,000</span></div></div>
+        <div class="sr-row"><div class="sr-lbl"><span>💱</span>International</div><div class="rw"><input type="range" min="0" max="100000" step="2000" value="5000" id="s-forex" oninput="upd('s-forex','sv-forex')"><span class="rv" id="sv-forex">₹5,000</span></div></div>
+        <div class="sr-row"><div class="sr-lbl"><span>📚</span>Education</div><div class="rw"><input type="range" min="0" max="50000" step="1000" value="0" id="s-edu" oninput="upd('s-edu','sv-edu')"><span class="rv" id="sv-edu">₹0</span></div></div>
+        <div class="sr-row"><div class="sr-lbl"><span>🛍️</span>Other / Offline</div><div class="rw"><input type="range" min="0" max="40000" step="1000" value="8000" id="s-misc" oninput="upd('s-misc','sv-misc')"><span class="rv" id="sv-misc">₹8,000</span></div></div>
+      </div>
+      <div class="fg">
+        <div><label class="fl-l">Annual Income</label><select class="fsi" id="r-inc"><option value="3">Below ₹5L</option><option value="6">₹5–10L</option><option value="12" selected>₹10–20L</option><option value="20">₹20–30L</option><option value="30">₹30L+</option></select></div>
+        <div><label class="fl-l">Employment Type</label><select class="fsi" id="r-emp"><option value="salaried" selected>Salaried</option><option value="selfEmployed">Self-Employed / Business</option></select></div>
+        <div><label class="fl-l">Preferred Reward</label><select class="fsi" id="r-type"><option value="cashback">Direct Cashback</option><option value="miles">Airline Miles</option><option value="points" selected>Reward Points</option></select></div>
+        <div><label class="fl-l">Annual Fee Limit</label><select class="fsi" id="r-fee"><option value="0">₹0 (Free only)</option><option value="1000">Up to ₹1K</option><option value="5000" selected>Up to ₹5K</option><option value="15000">Up to ₹15K</option><option value="999999">No limit</option></select></div>
+        <div><label class="fl-l">International Travel</label><select class="fsi" id="r-intl"><option value="never">Never</option><option value="rare">1–2 trips/yr</option><option value="moderate" selected>3–5 trips/yr</option><option value="frequent">6+ trips/yr</option></select></div>
+        <div><label class="fl-l">Priority Benefit</label><select class="fsi" id="r-pri"><option value="lounge">Airport Lounge</option><option value="dining">Dining</option><option value="golf">Golf & Lifestyle</option><option value="cashback-max">Max Cashback</option><option value="insurance">Travel Insurance</option><option value="forex">Low Forex</option></select></div>
+        <div class="fg-full"><label class="fl-l">Card Tier Preference</label><select class="fsi" id="r-tier"><option value="all">Any Tier</option><option value="super-premium">Super Premium</option><option value="premium">Premium</option><option value="mid">Mid-Range</option><option value="entry">Entry Level</option></select></div>
+      </div>
+      <button class="sub-btn" onclick="getRec()">Get My Top 3 Cards →</button>
+      <div id="rec-out" style="display:none;margin-top:26px;padding-top:26px;border-top:1px solid var(--b1)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TRANSFER PARTNERS ===== -->
+<div id="page-transfer" class="page">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:38px 22px">
+    <div class="w"><div class="s-eye">Reward Economics</div><div class="s-title" style="margin-bottom:6px">Transfer Partner Intelligence</div><p style="font-size:.84rem;color:var(--t2)">Identify redemptions yielding ₹2–₹5+ per point. Airline & hotel transfer analysis.</p></div>
+  </div>
+  <div class="w sec">
+    <div class="tip"><div class="tip-i">💡</div><div class="tip-t"><strong>Golden Rule:</strong> Never redeem points for cashback or statement credit. Airline transfers to Business Class yield 3–8x more value. Accumulate 50,000+ points before transferring for the best award seat availability.</div></div>
+    <div class="s-eye" style="margin-bottom:11px">Airline Partners</div>
+    <div class="s-title" style="font-size:1.4rem;margin-bottom:20px">Best Value Airline Transfers</div>
+    <div class="tp-g" id="airline-tp-grid"></div>
+    <div class="divider"></div>
+    <div class="s-eye" style="margin-bottom:11px">Hotel Partners</div>
+    <div class="s-title" style="font-size:1.4rem;margin-bottom:20px">Hotel Loyalty Transfers</div>
+    <div class="tp-g" id="hotel-tp-grid"></div>
+    <div class="divider"></div>
+    <div class="s-eye" style="margin-bottom:11px">Card Summary</div>
+    <div class="s-title" style="font-size:1.4rem;margin-bottom:16px">Transfer Partners by Card</div>
+    <div class="tbl-wrap"><table class="tp-tbl" id="card-tp-table"><thead><tr><th>Card</th><th>Bank</th><th>Transfer Partners</th><th>Best Ratio</th></tr></thead><tbody id="card-tp-body"></tbody></table></div>
+  </div>
+</div>
+
+<!-- ===== EDUCATION ===== -->
+<div id="page-edu" class="page">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:38px 22px">
+    <div class="w"><div class="s-eye">Financial Education</div><div class="s-title" style="margin-bottom:6px">Credit Card Intelligence Hub</div><p style="font-size:.84rem;color:var(--t2)">Master rewards, travel hacking, and financial optimization. Written clearly — not in banker-speak.</p></div>
+  </div>
+  <div id="edu-grid-view"><div class="w sec" style="padding-top:32px"><div class="edu-g" id="edu-grid"></div></div></div>
+  <div id="edu-art-view" style="display:none">
+    <div class="w" style="padding:20px"><button class="back-btn" onclick="closeEdu()">← Back to Education</button></div>
+    <div id="edu-art-content"></div>
+  </div>
+</div>
+
+<!-- ===== MARKET INTEL ===== -->
+<div id="page-market" class="page">
+  <div style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:38px 22px">
+    <div class="w"><div class="s-eye">Industry Research</div><div class="s-title" style="margin-bottom:6px">Credit Card Market Intelligence</div><p style="font-size:.84rem;color:var(--t2)">LTF offers, devaluations, best long-term value cards, and cards to reassess.</p></div>
+  </div>
+  <div class="w sec">
+    <div class="s-eye" style="margin-bottom:9px">Limited-Time Free</div>
+    <div class="s-title" style="font-size:1.4rem;margin-bottom:6px">Lifetime Free Card Offers</div>
+    <p style="font-size:.8rem;color:var(--t2);margin-bottom:22px">Apply before these deadlines. Significant value at zero cost.</p>
+    <div class="mi-g" id="ltf-mi-grid"></div>
+    <div class="divider"></div>
+    <div class="s-eye" style="margin-bottom:9px">Devaluation Tracker</div>
+    <div class="s-title" style="font-size:1.4rem;margin-bottom:6px">Benefit Changes 2024–2026</div>
+    <p style="font-size:.8rem;color:var(--t2);margin-bottom:20px">Benefit cuts, policy changes and program restructurings across Indian credit cards.</p>
+    <div id="deval-list"></div>
+    <div class="divider"></div>
+    <div class="s-eye" style="margin-bottom:9px">Long-Term Value</div>
+    <div class="s-title" style="font-size:1.4rem;margin-bottom:20px">Cards Worth Keeping</div>
+    <div class="mi-g" id="best-mi-grid"></div>
+    <div class="divider"></div>
+    <div class="s-eye" style="margin-bottom:9px">Caution Zone</div>
+    <div class="s-title" style="font-size:1.4rem;margin-bottom:20px">Cards to Reassess</div>
+    <div class="mi-g" id="avoid-mi-grid"></div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="page-dashboard" class="page">
+  <div class="dash-wrap">
+    <aside class="dash-sb">
+      <div class="du">
+        <div class="du-av">M</div>
+        <div><div class="du-n">My Dashboard</div><div class="du-s" id="dash-sub">0 cards tracked</div></div>
+      </div>
+      <nav class="dsn">
+        <button class="dsbtn on" onclick="swDash('overview')" id="dn-overview"><span class="dsi">📊</span>Overview</button>
+        <button class="dsbtn" onclick="swDash('mycards')" id="dn-mycards"><span class="dsi">💳</span>My Cards</button>
+        <button class="dsbtn" onclick="swDash('rewards')" id="dn-rewards"><span class="dsi">⭐</span>Rewards</button>
+        <button class="dsbtn" onclick="swDash('bills')" id="dn-bills"><span class="dsi">📋</span>Bills</button>
+        <button class="dsbtn" onclick="swDash('analytics')" id="dn-analytics"><span class="dsi">📈</span>Analytics</button>
+        <button class="dsbtn" onclick="swDash('portfolio')" id="dn-portfolio"><span class="dsi">🎯</span>Optimizer</button>
+        <button class="dsbtn" onclick="swDash('insights')" id="dn-insights"><span class="dsi">💡</span>Insights</button>
+      </nav>
+      <div style="margin-top:20px;padding-top:15px;border-top:1px solid var(--b1)">
+        <button onclick="openModal('add-card-modal')" class="btn-pr" style="width:100%;font-size:.74rem">+ Add Card</button>
+      </div>
+    </aside>
+    <main class="dash-main">
+      <div class="dsec on" id="ds-overview">
+        <div class="dsh"><h2>Overview</h2><span style="font-size:.72rem;color:var(--t3)" id="dash-date"></span></div>
+        <div class="stat-g" id="stat-grid"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:20px">
+          <div id="ov-chart"></div>
+          <div id="ov-bills"></div>
+        </div>
+      </div>
+      <div class="dsec" id="ds-mycards">
+        <div class="dsh"><h2>My Cards</h2><button onclick="openModal('add-card-modal')" class="btn-pr btn-sm">+ Add Card</button></div>
+        <div class="mc-g" id="mc-grid"></div>
+      </div>
+      <div class="dsec" id="ds-rewards">
+        <div class="dsh"><h2>Reward Points Tracker</h2></div>
+        <div class="rm-g" id="rm-grid"></div>
+        <div id="reward-alerts"></div>
+        <div id="redeem-sugg"></div>
+      </div>
+      <div class="dsec" id="ds-bills">
+        <div class="dsh"><h2>Bill Tracker</h2><button onclick="openModal('add-bill-modal')" class="btn-se btn-sm">+ Add Bill</button></div>
+        <div class="warn" style="margin-bottom:14px"><div class="tip-i">⚠️</div><div class="tip-t" style="font-size:.74rem;color:var(--t2)">Bills tracked locally. Always verify with your bank statement before paying.</div></div>
+        <div class="bill-l" id="bill-list"></div>
+      </div>
+      <div class="dsec" id="ds-analytics">
+        <div class="dsh"><h2>Spending Analytics</h2></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+          <div id="monthly-chart"></div>
+          <div id="cat-chart"></div>
+        </div>
+      </div>
+      <div class="dsec" id="ds-portfolio">
+        <div class="dsh"><h2>Portfolio Optimizer</h2></div>
+        <div id="portfolio-content"></div>
+      </div>
+      <div class="dsec" id="ds-insights">
+        <div class="dsh"><h2>Personalized Insights</h2></div>
+        <div id="insights-content"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-ov" id="add-card-modal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+      <div class="modal-t">Add Credit Card</div>
+      <button class="modal-x" onclick="closeModal('add-card-modal')">✕</button>
+    </div>
+    <p class="modal-s">Track your card's balance, rewards, and due dates.</p>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div><label class="fl-l">Select Card</label><select class="fsi" id="m-card"><option value="">— Select your card —</option></select></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+        <div><label class="fl-l">Credit Limit (₹)</label><input class="fi" id="m-lim" type="number" placeholder="500000"></div>
+        <div><label class="fl-l">Current Balance (₹)</label><input class="fi" id="m-bal" type="number" placeholder="25000"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+        <div><label class="fl-l">Bill Due Day (1–31)</label><input class="fi" id="m-due" type="number" min="1" max="31" placeholder="15"></div>
+        <div><label class="fl-l">Last 4 Digits</label><input class="fi" id="m-last4" type="text" maxlength="4" placeholder="1234"></div>
+      </div>
+      <div><label class="fl-l">Reward Points Balance</label><input class="fi" id="m-pts" type="number" placeholder="5000"></div>
+    </div>
+    <div class="btn-row">
+      <button onclick="addCard()" class="btn-pr" style="flex:1">Add to Dashboard</button>
+      <button onclick="closeModal('add-card-modal')" class="btn-se">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-ov" id="add-bill-modal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+      <div class="modal-t">Add Bill Reminder</div>
+      <button class="modal-x" onclick="closeModal('add-bill-modal')">✕</button>
+    </div>
+    <p class="modal-s">Set payment reminders so you never miss a due date.</p>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div><label class="fl-l">Card</label><select class="fsi" id="b-card-sel"><option value="">— Select card —</option></select></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+        <div><label class="fl-l">Amount Due (₹)</label><input class="fi" id="b-amt" type="number" placeholder="25000"></div>
+        <div><label class="fl-l">Due Date</label><input class="fi" id="b-date" type="date"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button onclick="addBill()" class="btn-pr" style="flex:1">Add Reminder</button>
+      <button onclick="closeModal('add-bill-modal')" class="btn-se">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     INLINE DATA — cardiq-data.js embedded
+     ========================================================= -->
+<script src="cardiq-data.js"></script>
+
+<!-- =========================================================
+     APPLICATION ENGINE
+     ========================================================= -->
+<script>
+'use strict';
+
+/* ── STATE ── */
+const S = {
+  cards: JSON.parse(localStorage.getItem('ciq-v4-cards')||'[]'),
+  bills: JSON.parse(localStorage.getItem('ciq-v4-bills')||'[]'),
+  filt: { bank:'all', cat:null, fee:999999, spend:'all', tier:'all' },
+  catPending: null
+};
+const save = () => { localStorage.setItem('ciq-v4-cards', JSON.stringify(S.cards)); localStorage.setItem('ciq-v4-bills', JSON.stringify(S.bills)); };
+
+/* ── NAVIGATION ── */
+const PAGES = ['home','cards','detail','compare','lounge','rec','transfer','edu','market','dashboard'];
+function go(p) {
+  PAGES.forEach(x => { el('page-'+x)?.classList.remove('on'); el('nb-'+x)?.classList.remove('on'); });
+  el('page-'+p)?.classList.add('on');
+  el('nb-'+p)?.classList.add('on');
+  window.scrollTo(0, 0);
+  if(p==='home')    renderHome();
+  if(p==='cards')   renderCards();
+  if(p==='compare') initCompare();
+  if(p==='lounge')  { initLoungeSelects(); renderLounge(); }
+  if(p==='edu')     renderEduGrid();
+  if(p==='market')  renderMarket();
+  if(p==='transfer')renderTransfer();
+  if(p==='dashboard')initDash();
+}
+const el = id => document.getElementById(id);
+const fmt = n => n === 0 ? 'FREE' : '₹'+n.toLocaleString('en-IN');
+const scColor = v => v>=8?'var(--em)':v>=6?'var(--blue2)':v>=4?'var(--orange)':'var(--red)';
+
+/* ── FILTER → CARDS ── */
+function filterGo(cat) { S.catPending = cat; go('cards'); }
+
+/* ── RENDER CARD ITEM ── */
+const TAG_CLASS = {travel:'tg-travel',cashback:'tg-cashback',premium:'tg-premium',lounge:'tg-lounge',
+  ltf:'tg-ltf',miles:'tg-miles','co-branded':'tg-cobrand',fuel:'tg-fuel',lifestyle:'tg-lifestyle',
+  digital:'tg-digital',hotel:'tg-cobrand',rewards:'tg-cashback',online:'tg-cashback',professional:'tg-lounge'};
+const TAG_LABEL = {ltf:'LTF','co-branded':'Co-Brand'};
+
+function renderCC(c) {
+  const sc = c.ratings?.overall||0;
+  const pct = sc/10, circ = 2*Math.PI*14, dashOff = circ*(1-pct);
+  const hasChange = (c.lounge?.threshold||'').includes('⚠️') || (c.earn?.note||'').includes('⚠️')
+    || (c.milestone||[]).some(m => (m||'').includes('⚠️')) || (c.feeWaiver||'').includes('⚠️');
+  const tags = (c.cat||[]).slice(0,4).map(t => `<span class="tg ${TAG_CLASS[t]||'tg-cashback'}">${TAG_LABEL[t]||t.charAt(0).toUpperCase()+t.slice(1)}</span>`).join('');
+  const fClr = c.annualFee===0?'var(--em)':'var(--t1)';
+  const fxClr = c.forex<=2?'var(--em)':c.forex>=3.5?'var(--red)':'var(--orange)';
+  return `<div class="cc" onclick="showDetail('${c.id}')">
+    <div class="cc-top">
+      <div class="cc-bg" style="background:${c.gradient}"></div>
+      <div class="cc-shadow"></div>
+      ${c.ltf?`<div class="cc-b1 cc-ltf-b">LTF ✓</div>`:hasChange?`<div class="cc-b1 cc-change-b">⚠ Changed</div>`:''}
+      <div class="cc-vis"><div class="cv-chip"></div><div class="cv-num">•••• •••• •••• ••••</div></div>
+    </div>
+    <div class="cc-body">
+      <div class="cc-bank">${c.bank}${c.ltf?` <span class="badge-ltf">LTF</span>`:''}</div>
+      <div class="cc-name">${c.name}</div>
+      <div class="cc-desc">${(c.target||'').split(',')[0]}</div>
+      <div class="tags">${tags}</div>
+      <div class="cc-metrics">
+        <div class="ccm"><div class="ccm-v" style="color:${fClr}">${c.annualFee===0?'FREE':'₹'+(c.annualFee/1000).toFixed(1)+'K'}</div><div class="ccm-k">Annual Fee</div></div>
+        <div class="ccm"><div class="ccm-v">${c.rewardRate}%</div><div class="ccm-k">Earn Rate</div></div>
+        <div class="ccm"><div class="ccm-v" style="color:${fxClr}">${c.forex}%</div><div class="ccm-k">Forex</div></div>
+      </div>
+      <div class="cc-foot">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="sr">
+            <svg viewBox="0 0 32 32" width="34" height="34">
+              <circle class="sr-bg" cx="16" cy="16" r="14"/>
+              <circle class="sr-fi" cx="16" cy="16" r="14" stroke="${scColor(sc)}" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${dashOff.toFixed(2)}"/>
+            </svg>
+            <div class="sr-n" style="color:${scColor(sc)}">${sc}</div>
+          </div>
+          <div><div class="sc-lbl">Score</div><div class="sc-val">/ 10</div></div>
+        </div>
+        <div class="cc-arr">Details →</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── HOME ── */
+function renderHome() {
+  const top = [...CARD_DB].sort((a,b) => (b.ratings?.overall||0)-(a.ratings?.overall||0)).slice(0,6);
+  el('home-grid').innerHTML = top.map(renderCC).join('');
+}
+
+/* ── ALL CARDS ── */
+function renderCards() {
+  if(S.catPending){ S.filt.cat = S.catPending; S.catPending = null; }
+  let cards = CARD_DB.filter(c => {
+    if(S.filt.bank !== 'all' && c.bank !== S.filt.bank) return false;
+    if(S.filt.cat && !(c.cat||[]).includes(S.filt.cat)) return false;
+    if((c.annualFee||0) > S.filt.fee) return false;
+    if(S.filt.tier !== 'all' && c.tier !== S.filt.tier) return false;
+    if(S.filt.spend !== 'all'){
+      const sp = c.ratings?.spend||{};
+      const m = {online:sp.online>=7,dining:sp.dining>=7,travel:sp.travel>=7,fuel:sp.fuel>=5,forex:sp.forex>=7,edu:sp.edu>=5};
+      if(!m[S.filt.spend]) return false;
+    }
+    return true;
+  }).sort((a,b) => (b.ratings?.overall||0)-(a.ratings?.overall||0));
+  const cnt = el('cards-count');
+  if(cnt) cnt.textContent = `Showing ${cards.length} card${cards.length!==1?'s':''}`;
+  const g = el('all-cards-grid');
+  if(g) g.innerHTML = cards.length ? cards.map(renderCC).join('')
+    : `<div class="empty" style="grid-column:1/-1"><div class="empty-i">🔍</div><div class="empty-t">No cards found</div><div class="empty-s">Try adjusting your filters</div></div>`;
+}
+
+function applyF(type, val, btn) {
+  const bar = el('card-filters');
+  if(type === 'bank'){
+    bar.querySelectorAll('.fc-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    S.filt.bank = val;
+  } else if(type === 'cat'){
+    S.filt.cat = S.filt.cat === val ? null : val;
+    btn.classList.toggle('on');
+  }
+  renderCards();
+}
+function applyFee(v){ S.filt.fee = v==='all'?999999:parseInt(v); renderCards(); }
+function applySpend(v){ S.filt.spend = v; renderCards(); }
+function applyTier(v){ S.filt.tier = v; renderCards(); }
+
+/* ── CARD DETAIL ── */
+function showDetail(id) {
+  const c = CARD_DB.find(x => x.id === id);
+  if(!c) return;
+  const sc = c.ratings||{};
+  const pct = (sc.overall||0)/10;
+  const circ2 = 2*Math.PI*26, dashOff2 = circ2*(1-pct);
+  const hasChange = (c.lounge?.threshold||'').includes('⚠️') || (c.earn?.note||'').includes('⚠️') || (c.feeWaiver||'').includes('⚠️');
+  const vpp = c.valuePerPoint||{};
+  const bestVPP = Object.entries(vpp).sort((a,b)=>b[1]-a[1])[0];
+  const scRows = [['Reward Earn',sc.earn],['Redeem Value',sc.redeem],['Lounge',sc.lounge],
+    ['Travel',sc.travel],['Lifestyle',sc.lifestyle],['Fee Value',sc.fee],['Stability',sc.stability]];
+  const insType = c.insurance;
+  const insStr = insType && typeof insType === 'object'
+    ? Object.entries(insType).map(([k,v])=>`${k.replace(/([A-Z])/g,' $1').trim()}: ${v}`).join(' · ')
+    : (insType||'None');
+
+  el('detail-root').innerHTML = `
+    <div class="cd-hero">
+      <div class="cd-grid">
+        <div>
+          <button class="back-btn" onclick="go('cards')">← Back to All Cards</button>
+          ${hasChange?`<div class="deval" style="margin-bottom:13px"><div class="tip-i">⚠️</div><div class="tip-t" style="font-size:.78rem;color:var(--t2)">This card has recent benefit changes. Review threshold conditions carefully.</div></div>`:''}
+          <div class="cd-bank-row">
+            <span class="cd-bank-label">${c.bank}</span>
+            ${c.ltf?`<span class="badge-ltf">Lifetime Free</span>`:''}
+            ${hasChange?`<span class="badge-hot">CHANGED</span>`:''}
+          </div>
+          <div class="cd-name">${c.name}</div>
+          <p class="cd-desc">${c.target}</p>
+          <div class="cd-nets">${(c.networks||[]).map(n=>`<span class="net-tag">${n}</span>`).join('')}</div>
+          <div class="cd-fees">
+            <div class="fee-pill"><div class="fp-v" style="color:${c.joiningFee===0?'var(--em)':'var(--t1)'}">${fmt(c.joiningFee)}</div><div class="fp-k">Joining Fee</div></div>
+            <div class="fee-pill"><div class="fp-v" style="color:${c.annualFee===0?'var(--em)':'var(--t1)'}">${fmt(c.annualFee)}</div><div class="fp-k">Annual Fee</div></div>
+            <div class="fee-pill"><div class="fp-v" style="color:${c.forex<=2?'var(--em)':c.forex>=3.5?'var(--red)':'var(--orange)'}">${c.forex}%</div><div class="fp-k">Forex</div></div>
+            <div class="fee-pill"><div class="fp-v">${c.rewardRate}%</div><div class="fp-k">Earn Rate</div></div>
+          </div>
+          <div class="cd-btns">
+            <button onclick="openModal('add-card-modal');document.getElementById('m-card').value='${c.id}'" class="btn-pr">+ Add to Dashboard</button>
+            <a href="${c.link||'#'}" target="_blank" class="btn-se" style="display:inline-block;cursor:pointer">Apply on Official Site →</a>
+          </div>
+        </div>
+        <div class="sc-panel">
+          <div class="sc-top">
+            <div class="sc-ring-big">
+              <svg viewBox="0 0 60 60" width="58" height="58">
+                <circle class="scrb-bg" cx="30" cy="30" r="26"/>
+                <circle class="scrb-fi" cx="30" cy="30" r="26" stroke="${scColor(sc.overall||0)}" stroke-width="5" stroke-linecap="round" fill="none" stroke-dasharray="${circ2.toFixed(2)}" stroke-dashoffset="${dashOff2.toFixed(2)}"/>
+              </svg>
+              <span class="n" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:900;color:${scColor(sc.overall||0)}">${sc.overall||0}</span>
+            </div>
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-size:.97rem;font-weight:700">Overall Score</div>
+              <div style="font-size:.68rem;color:var(--t3)">7-factor analysis</div>
+              <div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:6px">${(c.cat||[]).map(t=>`<span class="tg ${TAG_CLASS[t]||'tg-cashback'}">${TAG_LABEL[t]||t.charAt(0).toUpperCase()+t.slice(1)}</span>`).join('')}</div>
+            </div>
+          </div>
+          <div class="sc-bars">
+            ${scRows.map(([l,v])=>v?`<div class="scb-row"><div class="scb-l">${l}</div><div class="scb-track"><div class="scb-fill" style="width:${(v||0)*10}%;background:${scColor(v||0)}"></div></div><div class="scb-v" style="color:${scColor(v||0)}">${v}</div></div>`:'').join('')}
+          </div>
+          ${bestVPP?`<div style="margin-top:13px;padding-top:13px;border-top:1px solid var(--b1)">
+            <div style="font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:6px">Best Redemption</div>
+            <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:900;color:var(--em)">₹${bestVPP[1].toFixed(2)}/pt</div>
+            <div style="font-size:.68rem;color:var(--t2)">${bestVPP[0].replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim()}</div>
+          </div>`:''}
+        </div>
+      </div>
+    </div>
+
+    <div class="cd-tabs">
+      <button class="cdt on" onclick="swTab(this,'dp-overview')">Overview</button>
+      <button class="cdt" onclick="swTab(this,'dp-earn')">Earn & Redeem</button>
+      <button class="cdt" onclick="swTab(this,'dp-benefits')">Benefits</button>
+      <button class="cdt" onclick="swTab(this,'dp-spendrating')">Spend Ratings</button>
+      <button class="cdt" onclick="swTab(this,'dp-eligibility')">Eligibility</button>
+      <button class="cdt" onclick="swTab(this,'dp-proscons')">Pros & Cons</button>
+      ${(c.transferPartners||[]).length?`<button class="cdt" onclick="swTab(this,'dp-transfer')">Transfer Partners</button>`:''}
+      <button class="cdt" onclick="swTab(this,'dp-vpp')">Point Values</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div id="dp-overview" class="cd-pane on">
+      <div class="ig">
+        <div class="igi"><div class="igi-k">Bank</div><div class="igi-v">${c.bank}</div></div>
+        <div class="igi"><div class="igi-k">Networks</div><div class="igi-v" style="font-size:.78rem">${(c.networks||[]).join(', ')}</div></div>
+        <div class="igi"><div class="igi-k">Joining Fee</div><div class="igi-v" style="color:${c.joiningFee===0?'var(--em)':'var(--t1)'}">${fmt(c.joiningFee)}</div></div>
+        <div class="igi"><div class="igi-k">Annual Fee</div><div class="igi-v" style="color:${c.annualFee===0?'var(--em)':'var(--t1)'}">${fmt(c.annualFee)}</div></div>
+        <div class="igi"><div class="igi-k">Fee Waiver</div><div class="igi-v" style="font-size:.77rem">${c.feeWaiver}</div></div>
+        <div class="igi"><div class="igi-k">Forex Markup</div><div class="igi-v" style="color:${c.forex<=2?'var(--em)':c.forex>=3.5?'var(--red)':'var(--orange)'}">${c.forex}%</div></div>
+        <div class="igi"><div class="igi-k">Reward Type</div><div class="igi-v" style="font-size:.77rem">${c.rewardCurrency}</div></div>
+        <div class="igi"><div class="igi-k">Domestic Lounge</div><div class="igi-v" style="font-size:.76rem">${c.lounge?.domestic||'N/A'}</div></div>
+        <div class="igi"><div class="igi-k">Intl Lounge</div><div class="igi-v" style="font-size:.76rem">${c.lounge?.intl||'N/A'}</div></div>
+        <div class="igi"><div class="igi-k">Railway Lounge</div><div class="igi-v" style="font-size:.76rem">${c.lounge?.railway||'N/A'}</div></div>
+        <div class="igi"><div class="igi-k">Golf</div><div class="igi-v" style="font-size:.76rem">${c.golf||'None'}</div></div>
+        <div class="igi"><div class="igi-k">Fuel Waiver</div><div class="igi-v" style="font-size:.76rem">${c.fuelWaiver||'None'}</div></div>
+      </div>
+      ${c.lounge?.spendCondition?`<div class="warn"><div class="tip-i">⚠️</div><div class="tip-t">${c.lounge.spendCondition}</div></div>`:''}
+      ${c.lounge?.threshold && !['N/A','No threshold','No spend threshold — truly unlimited','No threshold — most generous','Tier based on annual spend'].includes(c.lounge.threshold) && !c.lounge.threshold.includes('No threshold')
+        ?`<div class="warn"><div class="tip-i">⚠️</div><div class="tip-t">${c.lounge.threshold}</div></div>`:''}
+      <div style="margin-top:16px">
+        <div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:10px">Welcome Benefits</div>
+        ${(c.welcome||[]).map(w=>`<div style="display:flex;gap:8px;margin-bottom:6px;font-size:.8rem"><span style="color:var(--gold)">★</span>${w}</div>`).join('')}
+      </div>
+      <div style="margin-top:14px">
+        <div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:10px">Milestone Benefits</div>
+        ${(c.milestone||[]).map(m=>`<div style="display:flex;gap:8px;margin-bottom:6px;font-size:.8rem"><span style="color:var(--blue2)">🎯</span>${m}</div>`).join('')}
+      </div>
+      ${c.threshold?`<div class="warn" style="margin-top:14px"><div class="tip-i">⚠️</div><div class="tip-t">${c.threshold}</div></div>`:''}
+    </div>
+
+    <!-- EARN & REDEEM -->
+    <div id="dp-earn" class="cd-pane">
+      <div class="tbl-wrap"><table class="etbl"><thead><tr><th>Category</th><th>Earn Rate</th><th>Details</th></tr></thead><tbody>
+        ${[['🛒 Base/General',c.earn?.base,'All other spends'],
+           ['✈️ Travel',c.earn?.travel,'Flights, hotels, travel portals'],
+           ['🍔 Dining',c.earn?.dining,'Restaurants, food delivery'],
+           ['🌍 International',c.earn?.intl,'Overseas transactions'],
+           ['⛽ Fuel',c.earn?.fuel,'Petrol stations'],
+           ['🛒 Online',c.earn?.online,'E-commerce platforms'],
+           ['🛡️ Insurance',c.earn?.insurance,'Premium payments'],
+           ['👛 Wallets',c.earn?.wallet,'Digital wallet top-ups']]
+          .filter(r=>r[1]).map(r=>{
+            const nil = (r[1]||'').toUpperCase().includes('NIL') || (r[1]||'').toLowerCase().includes('excluded');
+            return `<tr><td>${r[0]}</td><td><span style="color:${nil?'var(--red)':'var(--em)'};font-weight:700">${r[1]}</span></td><td style="color:var(--t2);font-size:.74rem">${r[2]}</td></tr>`;
+          }).join('')}
+      </tbody></table></div>
+      ${c.earn?.note?`<div class="tip"><div class="tip-i">📝</div><div class="tip-t">${c.earn.note}</div></div>`:''}
+      <div style="margin-top:18px">
+        <div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:10px">Reward Exclusions</div>
+        <div>${(c.exclusions||[]).map(e=>`<span class="xtag">${e}</span>`).join('')}</div>
+      </div>
+      <div style="margin-top:16px;background:var(--s2);border-radius:11px;padding:16px">
+        <div style="font-size:.74rem;font-weight:700;margin-bottom:8px">💡 Optimal Redemption Strategy</div>
+        <div style="font-size:.8rem;color:var(--t2);line-height:1.75">${c.redeem||'N/A'}</div>
+      </div>
+    </div>
+
+    <!-- BENEFITS -->
+    <div id="dp-benefits" class="cd-pane">
+      <div class="bg">
+        <div class="bc"><div class="bc-i">✈️</div><div class="bc-t">Travel & Lounge</div><div class="bc-b">
+          Domestic: ${c.lounge?.domestic||'N/A'}<br>International: ${c.lounge?.intl||'N/A'}<br>
+          Railway: ${c.lounge?.railway||'N/A'}<br>Guests: ${c.lounge?.guests||'N/A'}<br>
+          ${c.lounge?.pp?'✓ Priority Pass included':'✗ No Priority Pass'}
+          ${c.lounge?.spendCondition?`<div style="color:var(--orange);margin-top:5px;font-size:.7rem">⚠️ ${c.lounge.spendCondition}</div>`:''}
+        </div></div>
+        <div class="bc"><div class="bc-i">🍽️</div><div class="bc-t">Dining</div><div class="bc-b">${(c.dining||['None']).join('<br>')}</div></div>
+        <div class="bc"><div class="bc-i">🎬</div><div class="bc-t">Movies & Entertainment</div><div class="bc-b">${(c.movies||['None']).join('<br>')}</div></div>
+        <div class="bc"><div class="bc-i">⛳</div><div class="bc-t">Golf Privileges</div><div class="bc-b">${c.golf||'None'}</div></div>
+        <div class="bc"><div class="bc-i">🛡️</div><div class="bc-t">Insurance</div><div class="bc-b">${insStr}</div></div>
+        <div class="bc"><div class="bc-i">🌍</div><div class="bc-t">Forex & International</div><div class="bc-b">
+          <span style="color:${c.forex<=2?'var(--em)':c.forex>=3.5?'var(--red)':'var(--orange)'};font-weight:700">Markup: ${c.forex}%</span><br>
+          ${c.forex<=2?'✓ Excellent for intl use':c.forex>=3.5?'✗ Avoid for intl spending':'⚠️ Moderate for intl'}<br>
+          Networks: ${(c.networks||[]).join(', ')}
+        </div></div>
+        <div class="bc"><div class="bc-i">⛽</div><div class="bc-t">Fuel Benefits</div><div class="bc-b">${c.fuelWaiver||'None'}</div></div>
+        <div class="bc"><div class="bc-i">💰</div><div class="bc-t">Cashback</div><div class="bc-b">${c.cashback||'N/A'}</div></div>
+      </div>
+    </div>
+
+    <!-- SPEND RATINGS -->
+    <div id="dp-spendrating" class="cd-pane">
+      <p style="font-size:.8rem;color:var(--t2);margin-bottom:16px">Category performance on a 0–10 scale. Identifies where this card excels.</p>
+      <div class="spg">
+        ${[['🛒','Online',sc.spend?.online],['🍔','Dining',sc.spend?.dining],['✈️','Travel',sc.spend?.travel],
+           ['⛽','Fuel',sc.spend?.fuel],['💱','Forex',sc.spend?.forex],['🏪','Offline',sc.spend?.offline],
+           ['📚','Education',sc.spend?.edu],['🌍','International',sc.spend?.intl]]
+          .filter(r=>r[2]!==undefined).map(r=>`
+          <div class="spc">
+            <div class="spic">${r[0]}</div>
+            <div class="spcat">${r[1]}</div>
+            <div class="spval" style="color:${scColor(r[2])}">${r[2]}</div>
+            <div class="spbar"><div class="spfill" style="width:${r[2]*10}%;background:${scColor(r[2])}"></div></div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- ELIGIBILITY -->
+    <div id="dp-eligibility" class="cd-pane">
+      <div class="elg">
+        <div class="elgc">
+          <div class="elgt" style="color:var(--blue2)">💼 Salaried Employees</div>
+          <div class="elgr"><div class="elgk">Min Income</div><div class="elgv">${c.eligibility?.salaried?.minIncome||'N/A'}</div></div>
+          <div class="elgr"><div class="elgk">Age</div><div class="elgv">${c.eligibility?.age||'N/A'}</div></div>
+          <div class="elgr"><div class="elgk">CIBIL Score</div><div class="elgv">${c.eligibility?.creditScore||'N/A'}</div></div>
+          ${c.eligibility?.salaried?.note?`<div class="elg-note">${c.eligibility.salaried.note}</div>`:''}
+        </div>
+        <div class="elgc">
+          <div class="elgt" style="color:var(--orange)">🏢 Self-Employed / Business</div>
+          <div class="elgr"><div class="elgk">Min ITR</div><div class="elgv">${c.eligibility?.selfEmployed?.minIncome||'N/A'}</div></div>
+          <div class="elgr"><div class="elgk">Age</div><div class="elgv">${c.eligibility?.age||'N/A'}</div></div>
+          <div class="elgr"><div class="elgk">CIBIL Score</div><div class="elgv">${c.eligibility?.creditScore||'N/A'}</div></div>
+          ${c.eligibility?.selfEmployed?.note?`<div class="elg-note">${c.eligibility.selfEmployed.note}</div>`:''}
+        </div>
+      </div>
+      ${c.eligibility?.existingRelation?`<div class="tip"><div class="tip-i">🏦</div><div class="tip-t"><strong>Banking Relationship:</strong> ${c.eligibility.existingRelation}</div></div>`:''}
+      <div class="tip" style="margin-top:11px"><div class="tip-i">ℹ️</div><div class="tip-t">Criteria are approximate. Actual approval depends on complete CIBIL profile, existing liabilities, and bank's internal scoring. Apply via your primary bank for best chances.</div></div>
+      <div style="margin-top:16px"><a href="${c.link||'#'}" target="_blank" class="btn-pr" style="display:inline-block">Apply on Official ${c.bank} Site →</a></div>
+    </div>
+
+    <!-- PROS & CONS -->
+    <div id="dp-proscons" class="cd-pane">
+      <div class="pc">
+        <div class="pros"><h3>✓ Advantages</h3>${(c.pros||[]).map(p=>`<div class="pi p">${p}</div>`).join('')}</div>
+        <div class="cons"><h3>✗ Limitations</h3>${(c.cons||[]).map(x=>`<div class="pi c">${x}</div>`).join('')}</div>
+      </div>
+      ${c.bestFor?`<div style="margin-top:14px;background:rgba(0,212,160,.06);border:1px solid rgba(0,212,160,.18);border-radius:10px;padding:14px"><div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--em);margin-bottom:6px">🏆 Best Used For</div><div style="font-size:.82rem">${c.bestFor}</div></div>`:''}
+    </div>
+
+    ${(c.transferPartners||[]).length?`
+    <!-- TRANSFER PARTNERS -->
+    <div id="dp-transfer" class="cd-pane">
+      <div class="tip"><div class="tip-i">🌍</div><div class="tip-t">Transfer points to these airline programs. Business/First Class awards yield ₹1–₹3+ per point — far better than cashback. Accumulate 50K+ before transferring.</div></div>
+      <div class="tbl-wrap"><table class="tp-tbl"><thead><tr><th>Airline / Program</th><th>Transfer Ratio</th><th>Strategy</th></tr></thead>
+      <tbody>${c.transferPartners.map(p=>{
+        const parts = p.split(' '); const ratio = parts[parts.length-1];
+        const name = parts.slice(0,-1).join(' ').replace(/[()]/g,'');
+        return `<tr><td style="font-weight:700">${name}</td><td><span class="ratio">${ratio}</span></td><td style="font-size:.73rem;color:var(--t2)">Business Class for best value</td></tr>`;
+      }).join('')}</tbody></table></div>
+      <div class="tip" style="margin-top:12px"><div class="tip-i">💡</div><div class="tip-t">${c.redeem}</div></div>
+    </div>`:''}
+
+    <!-- POINT VALUES -->
+    <div id="dp-vpp" class="cd-pane">
+      <p style="font-size:.8rem;color:var(--t2);margin-bottom:16px">Effective value per point across all redemption methods. Higher = better.</p>
+      <div class="vpp-g">
+        ${Object.entries(vpp).sort((a,b)=>b[1]-a[1]).map(([method,val],i)=>`
+          <div class="vpp-c ${i===0?'best':''}">
+            <div class="vpp-method">${method.replace(/([A-Z])/g,' $1').replace(/_/g,' ').trim()}</div>
+            <div class="vpp-amt">₹${val.toFixed(2)}</div>
+            <div class="vpp-per">per point</div>
+            ${i===0?`<div class="vpp-rec">Best Option ✓</div>`:`<div style="font-size:.59rem;color:var(--t3);margin-top:5px">${val<0.5?'⚠ Poor value':val<1?'Acceptable':'Good value'}</div>`}
+          </div>`).join('')}
+      </div>
+      <div style="background:var(--s2);border-radius:10px;padding:15px;margin-top:14px">
+        <div style="font-size:.73rem;font-weight:700;margin-bottom:7px">💡 Redemption Guidance</div>
+        <div style="font-size:.79rem;color:var(--t2);line-height:1.75">${c.redeem}</div>
+      </div>
+    </div>
+  `;
+  go('detail');
+}
+
+function swTab(btn, id) {
+  const root = el('detail-root');
+  root.querySelectorAll('.cdt').forEach(t=>t.classList.remove('on'));
+  root.querySelectorAll('.cd-pane').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  el(id)?.classList.add('on');
+}
+
+/* ── COMPARE ── */
+function initCompare() {
+  ['cmp1','cmp2','cmp3'].forEach(sid => {
+    const s = el(sid); if(!s||s.options.length>1) return;
+    CARD_DB.forEach(c => s.add(new Option(c.name, c.id)));
+  });
+}
+function runCompare() {
+  const ids = ['cmp1','cmp2','cmp3'].map(id=>el(id)?.value).filter(Boolean);
+  if(ids.length < 2){ el('cmp-out').innerHTML = `<div class="tip"><div class="tip-i">ℹ️</div><div class="tip-t">Please select at least 2 cards to compare.</div></div>`; return; }
+  const cards = ids.map(id=>CARD_DB.find(c=>c.id===id)).filter(Boolean);
+  const rows = [
+    ['Annual Fee', c=>c.annualFee===0?`<span class="cg-t">FREE</span>`:fmt(c.annualFee)],
+    ['Joining Fee', c=>fmt(c.joiningFee)],
+    ['Networks', c=>(c.networks||[]).join(', ')],
+    ['Reward Type', c=>c.rewardCurrency],
+    ['Earn Rate', c=>`<strong>${c.rewardRate}%</strong>`],
+    ['Forex Markup', c=>`<span style="color:${c.forex<=2?'var(--em)':c.forex>=3.5?'var(--red)':'var(--orange)'};font-weight:700">${c.forex}%</span>`],
+    ['Domestic Lounge', c=>c.lounge?.domestic||'None'],
+    ['Intl Lounge', c=>c.lounge?.intl||'None'],
+    ['Railway Lounge', c=>c.lounge?.railway||'None'],
+    ['Priority Pass', c=>c.lounge?.pp?`<span class="cg-t">✓ Yes</span>`:`<span class="cr-t">✗ No</span>`],
+    ['Lounge Threshold', c=>c.lounge?.spendCondition?`<span style="color:var(--orange);font-size:.72rem">⚠️ ${c.lounge.spendCondition}</span>`:`<span class="cg-t">No threshold</span>`],
+    ['Fuel Waiver', c=>c.fuelWaiver||'None'],
+    ['Golf', c=>c.golf||'None'],
+    ['Insurance', c=>{ const i=c.insurance; return i&&typeof i==='object'?Object.values(i).slice(0,2).join(', '):(i||'None'); }],
+    ['Fee Waiver', c=>c.feeWaiver||'None'],
+    ['LTF', c=>c.ltf?`<span class="cg-t">✓ Yes</span>`:`<span class="cr-t">✗ No</span>`],
+    ['Overall Score', c=>`<div class="tbl-sc">${c.ratings?.overall||0}</div>`],
+    ['Earn Score', c=>`<span style="color:${scColor(c.ratings?.earn||0)}">${c.ratings?.earn||0}/10</span>`],
+    ['Lounge Score', c=>`<span style="color:${scColor(c.ratings?.lounge||0)}">${c.ratings?.lounge||0}/10</span>`],
+    ['Travel Score', c=>`<span style="color:${scColor(c.ratings?.travel||0)}">${c.ratings?.travel||0}/10</span>`],
+    ['Stability', c=>`<span style="color:${scColor(c.ratings?.stability||0)}">${c.ratings?.stability||0}/10</span>`],
+    ['Online Rating', c=>`${c.ratings?.spend?.online||'-'}/10`],
+    ['Dining Rating', c=>`${c.ratings?.spend?.dining||'-'}/10`],
+    ['Travel Rating', c=>`${c.ratings?.spend?.travel||'-'}/10`],
+    ['Fuel Rating', c=>`${c.ratings?.spend?.fuel||'-'}/10`],
+    ['Forex Rating', c=>`${c.ratings?.spend?.forex||'-'}/10`],
+    ['Education', c=>`${c.ratings?.spend?.edu||'-'}/10`],
+  ];
+  el('cmp-out').innerHTML = `<div class="tbl-wrap"><table class="cmp-tbl">
+    <thead><tr><th>Feature</th>${cards.map(c=>`<th style="background:var(--s2)">${c.short}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(([l,fn])=>`<tr><td style="color:var(--t2);font-size:.72rem;white-space:nowrap">${l}</td>${cards.map(c=>`<td style="font-size:.76rem">${fn(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+/* ── LOUNGE FINDER ── */
+function initLoungeSelects() {
+  const s = el('lc-card'); if(!s||s.options.length>1) return;
+  CARD_DB.forEach(c => s.add(new Option(c.name, c.id)));
+}
+function renderLounge() {
+  const cF=el('lc-card')?.value||'all', tF=el('lc-type')?.value||'all', bF=el('lc-bank')?.value||'all';
+  let cards = CARD_DB;
+  if(cF!=='all') cards = cards.filter(c=>c.id===cF);
+  if(bF!=='all') cards = cards.filter(c=>c.bank===bF);
+  if(tF==='unlimited') cards = cards.filter(c=>(c.lounge?.domestic||'').toLowerCase().includes('unlimited')||(c.lounge?.intl||'').toLowerCase().includes('unlimited'));
+  if(tF==='domestic') cards = cards.filter(c=>c.lounge?.domestic && !['None','N/A'].includes(c.lounge.domestic));
+  if(tF==='intl') cards = cards.filter(c=>c.lounge?.intl && !['None','N/A'].includes(c.lounge.intl));
+  if(tF==='railway') cards = cards.filter(c=>c.lounge?.railway && !['None','N/A'].includes(c.lounge.railway));
+  if(tF==='pp') cards = cards.filter(c=>c.lounge?.pp);
+  const out = el('lounge-out');
+  if(!cards.length){ out.innerHTML='<div class="empty"><div class="empty-i">🛋️</div><div class="empty-t">No results</div><div class="empty-s">Try adjusting filters</div></div>'; return; }
+  out.innerHTML = cards.map(c=>{
+    const warn = c.lounge?.spendCondition || (c.lounge?.threshold?.includes?.('⚠️')?c.lounge.threshold:null);
+    return `<div class="lounge-item">
+      <div class="li-hdr">
+        <div><div class="li-name">${c.name}</div><div class="li-bank">${c.bank} · ${(c.networks||[]).join(' / ')}</div></div>
+        <button onclick="showDetail('${c.id}')" class="btn-se btn-sm">View →</button>
+      </div>
+      <div class="li-badges">
+        ${c.lounge?.domestic&&!['None','N/A'].includes(c.lounge.domestic)?`<span class="lbdg lb-d">🏠 ${c.lounge.domestic}</span>`:''}
+        ${c.lounge?.intl&&!['None','N/A'].includes(c.lounge.intl)?`<span class="lbdg lb-i">✈️ ${c.lounge.intl}</span>`:''}
+        ${c.lounge?.railway&&!['None','N/A'].includes(c.lounge.railway)?`<span class="lbdg lb-r">🚄 ${c.lounge.railway}</span>`:''}
+        ${c.lounge?.pp?`<span class="lbdg lb-pp">Priority Pass ✓</span>`:''}
+        ${c.annualFee===0?`<span class="lbdg" style="background:rgba(0,212,160,.07);color:var(--em);border-color:rgba(0,212,160,.18)">Free Card</span>`:''}
+      </div>
+      ${warn?`<div class="li-warn">⚠️ ${warn}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ── RECOMMENDER ── */
+function upd(iid, vid) {
+  const v = parseInt(el(iid)?.value||0);
+  const e = el(vid); if(e) e.textContent = '₹'+v.toLocaleString('en-IN');
+}
+function getRec() {
+  const vals = ['s-online','s-dining','s-travel','s-fuel','s-forex','s-edu','s-misc'].map(id=>+(el(id)?.value||0));
+  const [online,dining,travel,fuel,forex,edu,misc] = vals;
+  const income = +(el('r-inc')?.value||6);
+  const emptype = el('r-emp')?.value||'salaried';
+  const rtype = el('r-type')?.value||'points';
+  const feeMax = +(el('r-fee')?.value||999999);
+  const intl = el('r-intl')?.value||'moderate';
+  const priority = el('r-pri')?.value||'lounge';
+  const tier = el('r-tier')?.value||'all';
+  const monthly = vals.reduce((a,b)=>a+b, 0);
+  const annual = monthly * 12;
+  const incL = {3:5,6:10,12:20,20:30,30:50}[income]*100000;
+
+  function scoreC(c) {
+    if((c.annualFee||0) > feeMax && feeMax!==999999) return -999;
+    if(tier!=='all' && c.tier!==tier) return -999;
+    const elig = emptype==='salaried' ? c.eligibility?.salaried?.minIncome : c.eligibility?.selfEmployed?.minIncome;
+    if(elig){ const m=parseFloat((elig||'').replace(/[₹L+p\.a\.,ITR ]/g,'').trim())*100000; if(!isNaN(m)&&incL<m) return -999; }
+    let s=(c.ratings?.overall||0)*8;
+    if(rtype==='cashback'&&(c.cat||[]).includes('cashback')) s+=20;
+    if(rtype==='miles'&&((c.cat||[]).includes('miles')||c.bank==='American Express India')) s+=22;
+    if(rtype==='points'&&(c.cat||[]).includes('premium')) s+=14;
+    if(online>12000&&c.id==='sbi-cashback') s+=32;
+    if(online>8000&&c.id==='icici-amazon') s+=22;
+    if(dining>5000&&(c.id==='axis-ace'||c.id==='amex-mrcc'||c.id==='hsbc-live-plus')) s+=20;
+    if(travel>12000&&((c.cat||[]).includes('travel')||(c.cat||[]).includes('premium'))) s+=20;
+    if(fuel>5000&&(c.cat||[]).includes('fuel')) s+=25;
+    if(edu>5000&&c.id==='sbi-cashback') s+=15;
+    if((intl==='frequent'||intl==='moderate')&&(c.forex||4)<=2) s+=24;
+    if(intl==='frequent'&&(c.lounge?.intl||'').toLowerCase().includes('unlimited')) s+=18;
+    if(priority==='lounge'&&((c.lounge?.intl||'').toLowerCase().includes('unlimited')||(c.lounge?.domestic||'').toLowerCase().includes('unlimited'))) s+=28;
+    if(priority==='cashback-max'&&(c.cat||[]).includes('cashback')) s+=24;
+    if(priority==='forex'&&(c.forex||4)<=1.5) s+=28;
+    if(priority==='dining'&&(c.ratings?.spend?.dining||0)>=8) s+=20;
+    if(priority==='golf'&&c.golf&&c.golf!=='None') s+=22;
+    if(c.ltf) s+=8;
+    const net=(annual*((c.rewardRate||0)/100))-(c.annualFee||0);
+    s+=net>15000?20:net>8000?12:net>0?5:-10;
+    return s;
+  }
+
+  const results = CARD_DB.map(c=>({c,s:scoreC(c)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,3);
+  const out = el('rec-out'); out.style.display='block';
+  if(!results.length){ out.innerHTML='<div class="warn"><div class="tip-i">⚠️</div><div class="tip-t">No cards match your profile. Try increasing fee tolerance or adjusting income.</div></div>'; return; }
+  out.innerHTML = `
+    <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:-.03em;margin-bottom:4px">Your Top ${results.length} Recommendations</div>
+    <p style="font-size:.78rem;color:var(--t3);margin-bottom:20px">Based on ₹${monthly.toLocaleString('en-IN')}/month · ${emptype==='salaried'?'Salaried':'Self-Employed'}</p>
+    ${results.map(({c},i)=>{
+      const annRew=Math.round(annual*(c.rewardRate||0)/100);
+      const net=annRew-(c.annualFee||0);
+      const reasons=[];
+      if((c.cat||[]).includes('cashback')&&rtype==='cashback') reasons.push('Cashback match');
+      if((c.forex||4)<=2&&intl!=='never') reasons.push('Low '+c.forex+'% forex');
+      if((c.lounge?.intl||'').includes('Unlimited')||(c.lounge?.domestic||'').includes('Unlimited')) reasons.push('Unlimited lounge');
+      if(c.annualFee===0||c.ltf) reasons.push('Zero/LTF fee');
+      if(online>12000&&c.id==='sbi-cashback') reasons.push('Best for online');
+      if(travel>12000&&(c.cat||[]).includes('travel')) reasons.push('Travel optimized');
+      if(fuel>5000&&(c.cat||[]).includes('fuel')) reasons.push('Fuel savings');
+      if((c.cat||[]).includes('miles')&&rtype==='miles') reasons.push('Miles match');
+      if(edu>5000&&c.id==='sbi-cashback') reasons.push('Education cashback');
+      if((c.ratings?.spend?.forex||0)>=8&&forex>5000) reasons.push('Intl optimized');
+      return `<div class="rcard">
+        <div class="rcard-rank">${i+1}</div>
+        <div class="rcard-name">${c.name}</div>
+        <div class="rcard-bank">${c.bank} · ${(c.networks||[]).join(', ')}</div>
+        <div class="match-tags">${reasons.map(r=>`<span class="mtag">✓ ${r}</span>`).join('')}</div>
+        <div class="ev-box">
+          <div><div class="ev-v">₹${annRew.toLocaleString('en-IN')}</div><div class="ev-k">Est. Annual Rewards</div></div>
+          <div><div class="ev-v">${fmt(c.annualFee)}</div><div class="ev-k">Annual Fee</div></div>
+          <div><div class="ev-v ${net<0?'neg':''}">₹${Math.abs(net).toLocaleString('en-IN')}${net>=0?' gain':' cost'}</div><div class="ev-k">Net Benefit</div></div>
+        </div>
+        <div class="pc" style="gap:10px">
+          <div class="pros"><h3>Why It Fits</h3>${(c.pros||[]).slice(0,3).map(p=>`<div class="pi p">${p}</div>`).join('')}</div>
+          <div class="cons"><h3>Watch Out</h3>${(c.cons||[]).slice(0,2).map(x=>`<div class="pi c">${x}</div>`).join('')}</div>
+        </div>
+        <div style="margin-top:13px;display:flex;gap:8px">
+          <button onclick="showDetail('${c.id}')" class="btn-pr btn-sm">Full Analysis →</button>
+          <a href="${c.link||'#'}" target="_blank" class="btn-se btn-sm" style="display:inline-block">Apply Now</a>
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+/* ── TRANSFER PARTNERS ── */
+function renderTransfer() {
+  const ag = el('airline-tp-grid'), hg = el('hotel-tp-grid'), tbody = el('card-tp-body');
+  if(ag && TRANSFER_PARTNERS?.airlines){
+    ag.innerHTML = TRANSFER_PARTNERS.airlines.map(a=>`
+      <div class="tp-c">
+        <div class="tp-hdr">
+          <div><div class="tp-name">✈️ ${a.name}</div><div class="tp-prog">${a.program} · ${a.code}</div></div>
+          <div class="tp-vpm"><div class="tp-vpm-n">${a.bestRedemption?.valuePerMile||'—'}</div><div class="tp-vpm-l">per mile</div></div>
+        </div>
+        <div class="tp-best">${a.bestFor}</div>
+        <div class="tp-redeem">
+          <div class="tp-redeem-r">🏆 ${a.bestRedemption?.route||''}</div>
+          <div class="tp-redeem-d">Cash: ${a.bestRedemption?.cashPrice||''} · Miles: ${(a.bestRedemption?.milesRequired||0).toLocaleString('en-IN')}</div>
+        </div>
+        <div class="tp-ratio-list">Card transfer ratios:</div>
+        ${Object.entries(a.cardRatios||{}).map(([cid,r])=>{
+          const card=CARD_DB.find(c=>c.id===cid);
+          return `<div class="tp-ratio-row"><span style="color:var(--t2)">${card?.short||cid}</span><span class="ratio">${r}</span></div>`;
+        }).join('')}
+      </div>`).join('');
+  }
+  if(hg && TRANSFER_PARTNERS?.hotels){
+    hg.innerHTML = TRANSFER_PARTNERS.hotels.map(h=>`
+      <div class="tp-c">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:5px">🏨 ${h.name}</div>
+        <div style="font-size:.73rem;color:var(--t2);margin-bottom:10px">${h.bestFor}</div>
+        <div style="font-size:.7rem;color:var(--em);font-weight:700;margin-bottom:10px">Est. Value: ${h.valuePerPoint}</div>
+        <div class="tp-ratio-list">Card transfer ratios:</div>
+        ${Object.entries(h.cardRatios||{}).map(([cid,r])=>{
+          const card=CARD_DB.find(c=>c.id===cid);
+          return `<div class="tp-ratio-row"><span style="color:var(--t2)">${card?.short||cid}</span><span style="color:var(--gold);font-weight:800">${r}</span></div>`;
+        }).join('')}
+      </div>`).join('');
+  }
+  if(tbody){
+    const tpCards = CARD_DB.filter(c=>(c.transferPartners||[]).length>0);
+    tbody.innerHTML = tpCards.map(c=>`<tr>
+      <td style="font-weight:700">${c.short}</td>
+      <td style="font-size:.73rem;color:var(--t2)">${c.bank}</td>
+      <td style="font-size:.7rem;color:var(--t2)">${(c.transferPartners||[]).slice(0,3).join(', ')}${(c.transferPartners||[]).length>3?` +${(c.transferPartners||[]).length-3} more`:''}</td>
+      <td><span class="ratio">${(c.transferPartners||[])[0]?.split(' ').pop()||'—'}</span></td>
+    </tr>`).join('');
+  }
+}
+
+/* ── EDUCATION ── */
+const EDU_DATA = [
+  {id:'basics',icon:'🎯',tag:'Getting Started',bg:'linear-gradient(135deg,#1a1a3e,#3b82f6)',title:'Reward Points 101',desc:"How Indian credit card reward systems work — and how to avoid leaving money on the table.",body:`
+    <h2>Reward Points 101</h2>
+    <p>Most Indians treat reward points like a vague lottery — collecting them and forgetting about them until they expire. The truth: <strong>reward points are a guaranteed return on spending</strong>, but only if you redeem them intelligently.</p>
+    <h3>The Core Insight</h3>
+    <p>Every time you swipe your card, your bank earns an interchange fee from the merchant (typically 1–2%). A portion comes back to you as reward points. The key: different redemption methods give wildly different values for the same points.</p>
+    <p>Example: HDFC Infinia gives 5 points per ₹150. Those points are worth ₹0.35 each as statement credit — but <strong>₹1 each on SmartBuy</strong>. Same points, nearly 3x the value, just by choosing the right redemption.</p>
+    <h3>Golden Rules</h3>
+    <ul>
+      <li>Never redeem for cashback/statement credit if value is below ₹0.50/pt</li>
+      <li>Travel redemptions (flights, hotels) beat cashback by 2–5x almost always</li>
+      <li>Check expiry — most points expire in 2–3 years</li>
+      <li>Don't transfer to airlines speculatively — only when you have a specific booking ready</li>
+    </ul>
+    <h3>2025 Benchmark Values</h3>
+    <table><thead><tr><th>Card</th><th>Best Redemption</th><th>₹/Point</th><th>Worst Option</th></tr></thead>
+    <tbody>
+    <tr><td>HDFC Infinia</td><td>SmartBuy Flights</td><td style="color:var(--em)">₹1.00</td><td>Statement: ₹0.35</td></tr>
+    <tr><td>Axis Magnus</td><td>Airline Transfer (1:2)</td><td style="color:var(--em)">₹1.00–2.00</td><td>Cash: ₹0.25</td></tr>
+    <tr><td>Amex MRCC</td><td>Airline Transfer (SQ/AI)</td><td style="color:var(--em)">₹1.50–3.00</td><td>Amazon: ₹0.39</td></tr>
+    <tr><td>SBI Cashback</td><td>Direct 5% cashback</td><td style="color:var(--em)">₹1.00</td><td>N/A (auto)</td></tr>
+    </tbody></table>`},
+  {id:'travel-hack',icon:'✈️',tag:'Travel Strategy',bg:'linear-gradient(135deg,#003d1f,#00d4a0)',title:'Travel Hacking India 2025',desc:"How to fly Business Class using credit card points. Real strategies that work in India.",body:`
+    <h2>Travel Hacking India — Business Class on Points</h2>
+    <p>Travel hacking isn't just for Americans. In 2025, Indian cardholders have more tools than ever to fly Business Class at economy prices.</p>
+    <h3>The Power Stack (3 Cards)</h3>
+    <ul>
+      <li><strong>Card 1: Amex MRCC</strong> — Build transferable miles. 18 airline partners, 5X dining Fridays.</li>
+      <li><strong>Card 2: HDFC Infinia or Axis Magnus</strong> — 10X/35X on travel + unlimited domestic lounge.</li>
+      <li><strong>Card 3: IDFC FIRST Wealth</strong> — 1.5% forex for all international spending. Zero annual fee. Always in wallet.</li>
+    </ul>
+    <h3>Best Award Redemptions from India</h3>
+    <ul>
+      <li><strong>Mumbai–New York Business (Air India):</strong> ~70,000 miles vs ₹2.5L+ cash. Save over ₹2L per ticket.</li>
+      <li><strong>Chennai–Singapore Business (SQ):</strong> ~45,000 KrisFlyer miles vs ₹90K–1.5L cash.</li>
+      <li><strong>Mumbai–London First Class (Emirates):</strong> ~90,000 Skywards miles — the aspirational redemption.</li>
+      <li><strong>Any India–Dubai Business (Emirates):</strong> ~20,000 miles — great starter award.</li>
+    </ul>
+    <h3>Step-by-Step: Your First Business Class</h3>
+    <ul>
+      <li>Apply Amex MRCC. Spend ₹1.5L in 6 months → 18,000 bonus MR.</li>
+      <li>Use every Friday for dining (5X MR). Use for all other spending.</li>
+      <li>After 12–18 months, accumulate 60,000+ MR.</li>
+      <li>Transfer to Air India Flying Returns at 1:1.</li>
+      <li>Book Mumbai/Delhi–London Business Class (~70,000 miles off-peak).</li>
+    </ul>`},
+  {id:'exclusions',icon:'🚫',tag:'Strategy',bg:'linear-gradient(135deg,#3d1a00,#fb923c)',title:'Mastering Reward Exclusions',desc:"What doesn't earn rewards — and smart workarounds for each exclusion.",body:`
+    <h2>Reward Exclusions — The Hidden Trap</h2>
+    <p>Banks quietly exclude multiple categories from earning rewards. If you're not careful, you could spend ₹5L/year and earn zero points on half of it.</p>
+    <h3>Universal Exclusions (All Major Cards)</h3>
+    <ul>
+      <li>🚫 <strong>Fuel</strong> — earns only surcharge waiver on most premium cards</li>
+      <li>🚫 <strong>Rent payments</strong> — excluded to prevent reward arbitrage</li>
+      <li>🚫 <strong>Wallet top-ups</strong> (Paytm, PhonePe)</li>
+      <li>🚫 <strong>Government payments / taxes</strong></li>
+      <li>🚫 <strong>Insurance premiums</strong> — capped or excluded on several cards</li>
+    </ul>
+    <h3>Smart Workarounds</h3>
+    <ul>
+      <li><strong>Fuel:</strong> Use BPCL SBI Octane (25X on BPCL) or HPCL cards specifically for fuel</li>
+      <li><strong>Education fees:</strong> SBI Cashback treats online education portals as regular "online" (earns 5%)</li>
+      <li><strong>Rent:</strong> NoBroker Pay — small processing fee but some cards earn rewards on it</li>
+    </ul>
+    <h3>2024–25 Devaluation Exclusions to Know</h3>
+    <ul>
+      <li>⚠️ Amex: Fuel MR removed from all Amex cards</li>
+      <li>⚠️ ICICI: ₹20K/month reward value cap on select cards</li>
+      <li>⚠️ SBI: From April 2026 — redemption only in 4,000 point blocks</li>
+    </ul>`},
+  {id:'multi-card',icon:'🃏',tag:'Portfolio',bg:'linear-gradient(135deg,#1a0a2a,#a855f7)',title:'Multi-Card Stacking Strategy',desc:"How to build a 2–3 card portfolio that maximizes every rupee across all categories.",body:`
+    <h2>Multi-Card Strategy — Build Your Ultimate Wallet</h2>
+    <p>One card can never maximize every category. A curated 2–3 card stack covers all major spending at peak earn rates.</p>
+    <h3>Stack 1: The Premium Traveler</h3>
+    <ul>
+      <li><strong>Primary:</strong> HDFC Infinia or Axis Magnus — unlimited lounge, 10X/35X travel</li>
+      <li><strong>Miles:</strong> Amex MRCC — 18 airline partners, 5X Friday dining</li>
+      <li><strong>International:</strong> IDFC FIRST Wealth — 1.5% forex, LTF companion</li>
+    </ul>
+    <h3>Stack 2: The Cashback Optimizer</h3>
+    <ul>
+      <li><strong>Online:</strong> SBI Cashback — 5% on ALL online</li>
+      <li><strong>Food/Transport:</strong> Axis ACE — 4% Swiggy/Zomato/Ola</li>
+      <li><strong>Amazon:</strong> Amazon Pay ICICI — 5% Amazon Prime (LTF)</li>
+    </ul>
+    <h3>Stack 3: The Zero-Fee Portfolio (LTF)</h3>
+    <ul>
+      <li>IDFC FIRST Wealth — LTF + best forex + 16 domestic lounge visits</li>
+      <li>Amazon Pay ICICI — LTF + 5% Amazon</li>
+      <li>BOB Eterna — Apply before March 31, 2026 for LTF + 12 domestic lounges</li>
+    </ul>`},
+  {id:'lounge-mastery',icon:'🛋️',tag:'Travel Comfort',bg:'linear-gradient(135deg,#1a1a3e,#3b82f6,#22d3ee)',title:'Airport Lounge Mastery',desc:"Never sit in terminal chaos again. How to access India's best airport lounges for free.",body:`
+    <h2>Airport Lounge Access — 2025 Complete Guide</h2>
+    <p>India's top airport lounges are genuinely excellent (Delhi T3 IGI and Bangalore Kempegowda are world-class). Here's how to access them free.</p>
+    <h3>Lounge Tiers (Post-2025 Devaluations)</h3>
+    <ul>
+      <li><strong>Unlimited (no threshold):</strong> HDFC Infinia, ICICI Emeralde, Amex Platinum, HSBC Premier</li>
+      <li><strong>High (12–16/year):</strong> IDFC Wealth (16 domestic), Axis Magnus (unlimited domestic), HDFC Regalia Gold (12)</li>
+      <li><strong>⚠️ Gated:</strong> BOB Eterna (₹40K/quarter), IDFC Railway (₹20K/month), HDFC Tata Neu (₹50K/quarter)</li>
+      <li><strong>⚠️ Reduced:</strong> SBI Elite cut from 8 to 4/year</li>
+    </ul>
+    <h3>Networks</h3>
+    <ul>
+      <li><strong>Priority Pass:</strong> 1,400+ lounges globally. Included with most premium cards.</li>
+      <li><strong>Dreamfolks:</strong> HDFC uses Dreamfolks for domestic access at 50+ Indian airports.</li>
+      <li><strong>Mastercard Lounge:</strong> Axis Magnus uses this at major Indian airports.</li>
+    </ul>`},
+  {id:'forex-guide',icon:'💱',tag:'International',bg:'linear-gradient(135deg,#003087,#3b82f6)',title:'Best Cards for International Use',desc:"Stop paying the hidden 3.5% forex tax. Which cards to use when travelling abroad.",body:`
+    <h2>Forex Markup — India's Hidden International Tax</h2>
+    <p>Every swipe abroad costs you 1.5–3.5% in forex markup. On a ₹5L international trip: ₹7,500 wasted (best case) to ₹17,500 (worst case).</p>
+    <h3>Forex Markup Rankings</h3>
+    <table><thead><tr><th>Card</th><th>Markup</th><th>Rating</th><th>Best Use</th></tr></thead>
+    <tbody>
+    <tr><td>IDFC FIRST Wealth</td><td>1.5%</td><td style="color:var(--em)">★★★★★</td><td>Best + FREE</td></tr>
+    <tr><td>ICICI Emeralde</td><td>1.5%</td><td style="color:var(--em)">★★★★★</td><td>Premium option</td></tr>
+    <tr><td>HDFC Infinia / Magnus</td><td>2.0%</td><td style="color:var(--em)">★★★★</td><td>Good with lounge</td></tr>
+    <tr><td>SBI Elite</td><td>1.99%</td><td style="color:var(--em)">★★★★</td><td>Very good</td></tr>
+    <tr><td>Amex / SBI Cashback / Axis ACE</td><td>3.5%</td><td style="color:var(--red)">★★</td><td>Avoid internationally</td></tr>
+    </tbody></table>
+    <h3>International Tips</h3>
+    <ul>
+      <li>Always choose "Pay in INR" when asked — DCC (Dynamic Currency Conversion) charges extra</li>
+      <li>Never use Amex (3.5%) for intl — use IDFC Wealth instead</li>
+      <li>ATM cash with credit cards = forex + cash advance fee — avoid completely</li>
+      <li>HSBC Premier: 5X points on overseas + 2% forex = excellent combo for HSBC customers</li>
+    </ul>`}
+];
+
+function renderEduGrid() {
+  const g = el('edu-grid');
+  if(g) g.innerHTML = EDU_DATA.map(a=>`
+    <div class="edu-c" onclick="openEdu('${a.id}')">
+      <div class="edu-top" style="background:${a.bg}">${a.icon}</div>
+      <div class="edu-body">
+        <div class="edu-tag">${a.tag}</div>
+        <div class="edu-title">${a.title}</div>
+        <div class="edu-desc">${a.desc}</div>
+      </div>
+    </div>`).join('');
+}
+function openEdu(id) {
+  const a = EDU_DATA.find(x=>x.id===id); if(!a) return;
+  el('edu-grid-view').style.display='none';
+  el('edu-art-view').style.display='block';
+  el('edu-art-content').innerHTML = `<div class="edu-art on" style="color:var(--t2)">${a.body}</div>`;
+  window.scrollTo(0,64);
+}
+function closeEdu() {
+  el('edu-grid-view').style.display='block';
+  el('edu-art-view').style.display='none';
+}
+
+/* ── MARKET INTEL ── */
+function renderMarket() {
+  const ltfCards = [
+    {bank:'Bank of Baroda',name:'BOB Eterna',feat:'Premium card (usually ₹2,499 fee). 12 domestic + 6 international lounge. Apply before deadline for LTF.',deadline:'March 31, 2026',id:'bob-eterna',border:'var(--gold)'},
+    {bank:'Bank of Baroda',name:'BOB Premier',feat:'Mid-premium. 8 domestic lounge visits. ₹999 fee waived via LTF offer.',deadline:'March 31, 2026',id:'bob-premier',border:'var(--gold)'},
+    {bank:'Bank of Baroda',name:'BOB Select',feat:'Entry premium. 4 domestic lounge visits. ₹20K/quarter spend required.',deadline:'March 31, 2026',id:'bob-select',border:'var(--gold)'},
+    {bank:'Bank of Baroda',name:'BOB Easy',feat:'Entry level. Genuinely free forever. Good for credit building.',deadline:'Always Free',id:'bob-easy',border:'var(--em)'},
+    {bank:'IDFC FIRST Bank',name:'IDFC FIRST Wealth',feat:'Best LTF card in India. 1.5% forex (lowest). 16 domestic lounge visits. Always lifetime free.',deadline:'Always Free',id:'idfc-wealth',border:'var(--em)'},
+    {bank:'IDFC FIRST Bank',name:'IDFC FIRST Select',feat:'Mid-tier LTF. 8 domestic lounges. 3X online earning. Easy approval.',deadline:'Always Free',id:'idfc-select',border:'var(--em)'},
+    {bank:'ICICI Bank',name:'Amazon Pay ICICI',feat:'LTF. 5% cashback on Amazon Prime. Best free online cashback card.',deadline:'Always Free',id:'icici-amazon',border:'var(--blue2)'},
+    {bank:'HDFC Bank',name:'Pixel Play / Pixel Go',feat:'Digital LTF cards for Gen-Z. Customizable benefits. Easy onboarding.',deadline:'Always Free',id:'hdfc-pixel-play',border:'var(--blue2)'},
+  ];
+
+  const ltfG = el('ltf-mi-grid');
+  if(ltfG) ltfG.innerHTML = ltfCards.map(l=>`
+    <div style="background:var(--s1);border:1px solid ${l.border};border-radius:13px;padding:18px;position:relative">
+      <div style="display:inline-block;background:rgba(212,168,75,.1);border:1px solid rgba(212,168,75,.25);color:var(--gold);font-size:.59rem;font-weight:800;padding:2px 8px;border-radius:20px;margin-bottom:10px">${l.deadline.includes('March')?'⚡ LTF EXPIRING':'✓ ALWAYS LTF'}</div>
+      <div style="font-size:.61rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:4px">${l.bank}</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:6px">${l.name}</div>
+      <div style="font-size:.75rem;color:var(--t2);margin-bottom:11px;line-height:1.6">${l.feat}</div>
+      <div style="font-size:.7rem;font-weight:700;color:${l.deadline.includes('March')?'var(--red)':'var(--em)'}">⏰ ${l.deadline}</div>
+      ${l.deadline.includes('March')?`<div id="cd-${l.id}" class="countdown"></div>`:''}
+      <button onclick="showDetail('${l.id}')" class="btn-se btn-sm" style="margin-top:11px;width:100%">View Card →</button>
+    </div>`).join('');
+
+  // Countdown
+  ltfCards.filter(l=>l.deadline.includes('March')).forEach(l=>{
+    const e=el('cd-'+l.id); if(!e) return;
+    const diff=new Date('2026-03-31T23:59:59')-new Date();
+    if(diff>0){ const d=Math.floor(diff/(1000*60*60*24)); e.textContent=`⏳ ${d} days remaining`; }
+  });
+
+  const devals = [
+    {type:'bad',badge:'⚠️ DEVALUED',name:'BOB Eterna & Premier — Lounge Gated',desc:'Lounge now requires ₹40,000/quarter from Jan 1, 2025. Previously more accessible. Both premium + mid cards.',date:'Jan 1, 2025'},
+    {type:'bad',badge:'⚠️ DEVALUED',name:'IDFC FIRST — Railway Lounge + Add-on Fee',desc:'Railway lounge now requires ₹20,000/month (Feb 20, 2025). Add-on card fee ₹499+GST introduced.',date:'Feb 20, 2025'},
+    {type:'bad',badge:'⚠️ DEVALUED',name:'HDFC Tata Neu — Lounge Spend Gated',desc:'Tata Neu Plus & Infinity now require ₹50,000/quarter for domestic lounge.',date:'2025'},
+    {type:'bad',badge:'⚠️ DEVALUED',name:'ICICI — Movie Benefits Removed + Reward Cap',desc:'Movie ticket benefits removed from Platinum. Reward points capped at ₹20K value/month.',date:'2024–2025'},
+    {type:'bad',badge:'⚠️ DEVALUED',name:'SBI Card — Lounge Cut + Apr 2026 Redemption',desc:'Airport lounge cut from 8→4 visits/year. From April 1, 2026: statement credit only in 4,000 point blocks.',date:'Lounge: 2024 · Redemption: April 1, 2026'},
+    {type:'bad',badge:'⚠️ DEVALUED',name:'American Express — Fuel MR Removed',desc:'Gold Charge Card and other Amex cards no longer earn Membership Rewards on fuel spending.',date:'Recent'},
+    {type:'good',badge:'✓ STABLE',name:'HDFC Infinia — No Devaluation',desc:'Unlimited lounge (no threshold), 10X SmartBuy, Club Marriott, Golf — all intact. Benchmark for stability.',date:'No change'},
+    {type:'good',badge:'✓ STABLE',name:'Axis Magnus — Benefits Intact',desc:'1:2 airline transfer ratio unchanged. 35X on travel portals. Unlimited domestic lounge (no threshold).',date:'No change'},
+    {type:'neutral',badge:'ℹ️ MONITOR',name:'ICICI Emeralde — Watch',desc:'Currently strong: 1.5% forex + unlimited lounge. Watch for potential caps given industry devaluation trend.',date:'Monitoring'},
+  ];
+  const dl = el('deval-list');
+  if(dl) dl.innerHTML = devals.map(d=>`
+    <div class="deval-i ${d.type==='bad'?'di-bad':d.type==='good'?'di-good':'di-neut'}">
+      <div class="d-badge ${d.type==='bad'?'db-bad':d.type==='good'?'db-good':'db-neut'}">${d.badge}</div>
+      <div class="d-name">${d.name}</div>
+      <div class="d-desc">${d.desc}</div>
+      <div class="d-date">📅 ${d.date}</div>
+    </div>`).join('');
+
+  const bestData = [
+    {icon:'🏆',border:'var(--gold)',title:'HDFC Infinia — Most Stable Premium',body:'Rock-solid. No devaluations. Unlimited lounge, 10X SmartBuy, Club Marriott, Golf. ₹12,500 fee pays for itself. The gold standard.',id:'hdfc-infinia-metal'},
+    {icon:'🌍',border:'var(--blue2)',title:'Axis Magnus — Best Travel Multiplier',body:'Best 1:2 airline transfer ratio in India. 35X on travel portals. Strong if you transfer 50K+ EDGE Miles/year for Business Class.',id:'axis-magnus'},
+    {icon:'🆓',border:'var(--em)',title:'IDFC FIRST Wealth — Best LTF',body:'Free forever. 1.5% forex (lowest). 16 domestic lounge visits. Non-negotiable companion for any international traveler.',id:'idfc-wealth'},
+    {icon:'💰',border:'var(--em)',title:'SBI Cashback — Best Online Cashback',body:'5% on ALL online spend — the broadest online cashback in India. Auto-credited. Self-funding above ₹20K/month online.',id:'sbi-cashback'},
+    {icon:'🛒',border:'var(--orange)',title:'Amazon Pay ICICI — Best Free Online',body:'LTF with 5% on Amazon Prime. Auto-credited. Best zero-fee card for Amazon buyers. Keep permanently.',id:'icici-amazon'},
+    {icon:'🍽️',border:'var(--pk)',title:'HSBC Live+ — Best Dining Cashback',body:'10% on dining/food delivery/grocery — extraordinary rate. 1.5% base is above average. ₹1K/month cashback cap.',id:'hsbc-live-plus'},
+  ];
+  const bestG = el('best-mi-grid');
+  if(bestG) bestG.innerHTML = bestData.map(c=>`
+    <div style="background:var(--s1);border:1px solid ${c.border};border-radius:13px;padding:18px;border-top:3px solid ${c.border}">
+      <div style="font-size:1.9rem;margin-bottom:10px">${c.icon}</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:6px">${c.title}</div>
+      <div style="font-size:.75rem;color:var(--t2);margin-bottom:12px;line-height:1.65">${c.body}</div>
+      <button onclick="showDetail('${c.id}')" class="btn-se btn-sm" style="width:100%">Full Analysis →</button>
+    </div>`).join('');
+
+  const avoidData = [
+    {icon:'⚠️',border:'var(--red)',title:'SBI Cards — Post-2024 Reassess',body:'Lounge halved to 4/year. Apr 2026 redemption blocks. Elite no longer best-in-class. SBI Cashback unaffected (direct cashback).'},
+    {icon:'⚠️',border:'var(--red)',title:'ICICI Platinum/Coral — Reduced Benefits',body:'Movie benefits gone. ₹20K/month reward cap. Significant value loss vs peers. Consider upgrading to Sapphiro or Emeralde.'},
+    {icon:'⚠️',border:'var(--orange)',title:'BOB Cards — Watch Spend Thresholds',body:'Worth the LTF offer only if you maintain ₹40K/quarter. Miss the threshold and the card loses its core lounge benefit.'},
+    {icon:'⚠️',border:'var(--orange)',title:'Amex Platinum India — ₹60K Fee',body:'₹60,000 annual fee + 3.5% forex + low earn rate. Hard to justify unless you extensively use Centurion Lounges + FHR + Taj Epicure.'},
+  ];
+  const avoidG = el('avoid-mi-grid');
+  if(avoidG) avoidG.innerHTML = avoidData.map(c=>`
+    <div style="background:var(--s1);border:1px solid ${c.border};border-radius:13px;padding:18px;border-top:3px solid ${c.border}">
+      <div style="font-size:1.9rem;margin-bottom:10px">${c.icon}</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:6px">${c.title}</div>
+      <div style="font-size:.75rem;color:var(--t2);line-height:1.65">${c.body}</div>
+    </div>`).join('');
+}
+
+/* ── SEARCH ── */
+function openSearch() {
+  el('so').classList.add('on');
+  setTimeout(()=>el('so-inp')?.focus(), 80);
+  doSearch('');
+}
+function closeSo() { el('so').classList.remove('on'); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSo(); });
+function doSearch(q) {
+  q = (q||'').toLowerCase().trim();
+  const inp = el('so-inp'); if(inp && inp.value.toLowerCase()!==q) inp.value=q||'';
+  const res = q
+    ? CARD_DB.filter(c =>
+        (c.name||'').toLowerCase().includes(q) ||
+        (c.bank||'').toLowerCase().includes(q) ||
+        (c.short||'').toLowerCase().includes(q) ||
+        (c.rewardCurrency||'').toLowerCase().includes(q) ||
+        (c.cat||[]).some(t=>t.includes(q)) ||
+        (c.tier||'').includes(q) ||
+        (q==='ltf'&&c.ltf) ||
+        (c.target||'').toLowerCase().includes(q) ||
+        (c.bestFor||'').toLowerCase().includes(q)
+      )
+    : CARD_DB.slice(0,9);
+  el('so-res').innerHTML = res.slice(0,10).map(c=>`
+    <div class="so-item" onclick="closeSo();showDetail('${c.id}')">
+      <div class="so-av" style="background:${c.gradient.slice(0,50)+'55'}">${c.bank.charAt(0)}</div>
+      <div><div class="so-nm">${c.name}</div><div class="so-bk">${c.bank} · ${(c.networks||[]).join(' / ')}</div></div>
+      <div class="so-meta"><strong>${c.annualFee===0?'FREE':fmt(c.annualFee)}/yr</strong>${c.rewardRate}% earn</div>
+      <div class="so-score">${c.ratings?.overall||0}</div>
+    </div>`).join('') || '<div style="text-align:center;color:var(--t3);padding:22px;font-size:.82rem">No cards found</div>';
+}
+
+/* ── DASHBOARD ── */
+function initDash() {
+  el('dash-date').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  el('dash-sub').textContent = `${S.cards.length} card${S.cards.length!==1?'s':''} tracked`;
+  // Populate add card select
+  const msel = el('m-card');
+  if(msel && msel.options.length<=1) CARD_DB.forEach(c=>msel.add(new Option(c.name,c.id)));
+  renderDashAll();
+}
+function swDash(sec) {
+  document.querySelectorAll('.dsec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.dsbtn').forEach(b=>b.classList.remove('on'));
+  el('ds-'+sec)?.classList.add('on');
+  el('dn-'+sec)?.classList.add('on');
+}
+function renderDashAll() { renderDashOverview(); renderMyCards(); renderRewards(); renderBills(); renderAnalytics(); renderPortfolio(); renderInsights(); }
+
+function renderDashOverview() {
+  const totLim=S.cards.reduce((s,c)=>s+(c.lim||0),0);
+  const totBal=S.cards.reduce((s,c)=>s+(c.bal||0),0);
+  const totPts=S.cards.reduce((s,c)=>s+(c.pts||0),0);
+  const soon=S.bills.filter(b=>{ const d=Math.ceil((new Date(b.date)-new Date())/(864e5)); return d>=0&&d<=10; });
+  el('stat-grid').innerHTML=`
+    <div class="stc"><div class="stc-i">💳</div><div class="stc-v">${S.cards.length}</div><div class="stc-l">Cards Tracked</div></div>
+    <div class="stc"><div class="stc-i">🏦</div><div class="stc-v">₹${(totLim/1e5).toFixed(1)}L</div><div class="stc-l">Total Credit Limit</div></div>
+    <div class="stc"><div class="stc-i">💰</div><div class="stc-v">₹${(totBal/1000).toFixed(0)}K</div><div class="stc-l">Total Balance</div></div>
+    <div class="stc"><div class="stc-i">⭐</div><div class="stc-v">${totPts.toLocaleString()}</div><div class="stc-l">Total Points</div></div>
+    <div class="stc" style="${soon.length?'border-color:rgba(255,69,96,.3)':''}"><div class="stc-i">${soon.length?'🚨':'📋'}</div><div class="stc-v" style="color:${soon.length?'var(--red)':'var(--t1)'}">${soon.length}</div><div class="stc-l">Bills Due (10 days)</div></div>`;
+  el('ov-chart').innerHTML=`<div class="ch-box"><div class="ch-t">Monthly Spend Trend</div><div class="ch-s">Last 6 months (sample)</div><div class="bar-ch">${[{l:'Jan',v:62},{l:'Feb',v:78},{l:'Mar',v:55},{l:'Apr',v:88},{l:'May',v:71},{l:'Jun',v:90}].map((m,i)=>`<div class="bw"><div class="bf" data-v="₹${m.v}K" style="height:${m.v}%;background:${i===5?'linear-gradient(to top,var(--blue),var(--em))':'var(--s4)'}"></div><div class="bl">${m.l}</div></div>`).join('')}</div></div>`;
+  el('ov-bills').innerHTML=`<div class="ch-box"><div class="ch-t">Upcoming Bills</div><div class="ch-s">${soon.length?soon.length+' due within 10 days':'No upcoming payments 🎉'}</div>${soon.slice(0,4).map(b=>{
+    const card=CARD_DB.find(c=>c.id===b.cardId);
+    const days=Math.ceil((new Date(b.date)-new Date())/864e5);
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px;background:${days<=3?'rgba(255,69,96,.06)':'var(--bg2)'};border-radius:8px;margin-bottom:6px;border:1px solid ${days<=3?'rgba(255,69,96,.2)':'var(--b1)'};font-size:.76rem">
+      <div><div style="font-weight:700">${card?.short||b.cardId}</div><div style="font-size:.65rem;color:var(--t3)">Due in ${days}d</div></div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.87rem">₹${parseInt(b.amount).toLocaleString()}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderMyCards() {
+  const g=el('mc-grid');
+  g.innerHTML=S.cards.map(dc=>{
+    const card=CARD_DB.find(c=>c.id===dc.cardId); if(!card) return '';
+    const util=dc.lim>0?Math.round(dc.bal/dc.lim*100):0;
+    return `<div class="mcrd">
+      <div class="mc-vis" style="background:${card.gradient}">
+        <div class="mc-chip"></div>
+        <div><div class="mc-num">•••• •••• •••• ${dc.last4||'••••'}</div>
+        <div class="mc-bot"><div class="mc-cn">${card.short}</div><div class="mc-bk">${card.bank}</div></div></div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-util"><span style="color:var(--t3)">Utilization</span><span style="font-weight:700;color:${util>70?'var(--red)':util>40?'var(--orange)':'var(--em)'}">${util}%</span></div>
+        <div class="mc-bar"><div class="mc-bfill" style="width:${util}%"></div></div>
+        <div class="mc-stats">
+          <div class="mc-stat"><div class="mc-sv">₹${(dc.bal/1000).toFixed(0)}K</div><div class="mc-sk">Balance</div></div>
+          <div class="mc-stat"><div class="mc-sv">₹${(dc.lim/1e5).toFixed(1)}L</div><div class="mc-sk">Limit</div></div>
+          <div class="mc-stat"><div class="mc-sv">${(dc.pts||0).toLocaleString()}</div><div class="mc-sk">Points</div></div>
+          <div class="mc-stat"><div class="mc-sv" style="color:${(dc.due||15)<=7?'var(--red)':'var(--t1)'}">Day ${dc.due||'—'}</div><div class="mc-sk">Due Day</div></div>
+        </div>
+        <button onclick="removeCard('${dc.id}')" style="width:100%;margin-top:8px;padding:7px;background:rgba(255,69,96,.1);border:1px solid rgba(255,69,96,.2);border-radius:7px;color:var(--red);font-size:.67rem;font-weight:700;cursor:pointer">Remove</button>
+      </div>
+    </div>`;
+  }).join('')+`<div class="add-mc" onclick="openModal('add-card-modal')"><div class="ico">+</div><span style="font-size:.8rem;color:var(--t2);font-weight:600">Add a Credit Card</span></div>`;
+}
+
+function renderRewards() {
+  const g=el('rm-grid');
+  if(!S.cards.length){g.innerHTML='<div class="empty"><div class="empty-i">⭐</div><div class="empty-t">No cards yet</div><div class="empty-s">Add cards to track reward points</div></div>';return;}
+  const cols=['#4c8eff','#00d4a0','#f4b942','#ec4899','#22d3ee','#b16dff'];
+  g.innerHTML=S.cards.map((dc,i)=>{
+    const card=CARD_DB.find(c=>c.id===dc.cardId); if(!card) return '';
+    const pts=dc.pts||0, max=100000, pct=Math.min(pts/max,1);
+    const r=38, circ=2*Math.PI*r, dOff=circ*(1-pct), col=cols[i%cols.length];
+    return `<div class="rmtr">
+      <div class="rm-lbl">${card.short}</div>
+      <div class="rm-ring">
+        <svg viewBox="0 0 90 90" width="86" height="86"><circle class="rmr-bg" cx="45" cy="45" r="${r}"/><circle class="rmr-fi" cx="45" cy="45" r="${r}" stroke="${col}" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${dOff.toFixed(2)}"/></svg>
+        <div class="rmr-v">${pts>=1000?(pts/1000).toFixed(0)+'K':pts}</div>
+      </div>
+      <div class="rm-cn">${card.rewardCurrency}</div>
+      <div style="font-size:.65rem;color:var(--t3);margin-top:3px">≈ ₹${Math.round(pts*0.25).toLocaleString()}</div>
+    </div>`;
+  }).join('');
+  el('reward-alerts').innerHTML=`<div class="tip"><div class="tip-i">⏰</div><div class="tip-t"><strong>Expiry Reminder:</strong> HDFC Points: 3 years · Axis EDGE Miles: 3 years · Amex MR: Never expire · IDFC Points: 3 years. Check your bank portal regularly.</div></div>`;
+  el('redeem-sugg').innerHTML=S.cards.length?`<div style="background:var(--s1);border:1px solid var(--b1);border-radius:13px;padding:18px"><div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:13px">💡 Redemption Recommendations</div>${S.cards.map(dc=>{
+    const card=CARD_DB.find(c=>c.id===dc.cardId); if(!card||!dc.pts) return '';
+    const best=Object.entries(card.valuePerPoint||{}).sort((a,b)=>b[1]-a[1])[0];
+    return `<div style="padding:12px;background:var(--bg2);border-radius:9px;margin-bottom:8px"><div style="font-weight:700;font-size:.82rem;margin-bottom:4px">${card.name}</div><div style="font-size:.76rem;color:var(--t2);margin-bottom:4px">${card.redeem}</div><div style="font-size:.72rem;color:var(--em)">Your ${(dc.pts||0).toLocaleString()} pts ≈ ₹${Math.round((dc.pts||0)*(best?best[1]:0.25)).toLocaleString()} at best redemption</div></div>`;
+  }).join('')}</div>`:'';
+}
+
+function renderBills() {
+  const l=el('bill-list');
+  if(!S.bills.length){l.innerHTML='<div class="empty"><div class="empty-i">📋</div><div class="empty-t">No bills tracked</div><div class="empty-s">Add reminders to never miss a payment</div></div>';return;}
+  l.innerHTML=[...S.bills].sort((a,b)=>new Date(a.date)-new Date(b.date)).map(b=>{
+    const card=CARD_DB.find(c=>c.id===b.cardId);
+    const days=Math.ceil((new Date(b.date)-new Date())/864e5);
+    const urg=days<=5;
+    return `<div class="bill ${urg?'urg':''}">
+      <div class="bi-ico" style="background:${urg?'rgba(255,69,96,.15)':'var(--s2)'}">${urg?'🚨':'📋'}</div>
+      <div><div class="bi-n">${card?.name||b.cardId}</div><div class="bi-d">Due: ${new Date(b.date).toLocaleDateString('en-IN')}</div></div>
+      <div><div class="bi-amt">₹${parseInt(b.amount).toLocaleString()}</div><div class="bi-days ${urg?'urg':''}">${days>0?days+'d left':days===0?'Due today!':'Overdue'}</div></div>
+      <button class="pay-btn" onclick="removeBill('${b.id}')">Mark Paid</button>
+    </div>`;
+  }).join('');
+}
+
+function renderAnalytics() {
+  const cats=[{cat:'Online',pct:32,col:'var(--blue2)'},{cat:'Travel',pct:25,col:'var(--em)'},{cat:'Dining',pct:18,col:'var(--gold)'},{cat:'Fuel',pct:10,col:'var(--orange)'},{cat:'Entertainment',pct:8,col:'var(--pk)'},{cat:'Others',pct:7,col:'var(--pu)'}];
+  el('monthly-chart').innerHTML=`<div class="ch-box"><div class="ch-t">Monthly Spend</div><div class="ch-s">Past 6 months</div><div class="bar-ch">${[{l:'Jan',v:45},{l:'Feb',v:62},{l:'Mar',v:58},{l:'Apr',v:78},{l:'May',v:67},{l:'Jun',v:84}].map((m,i)=>`<div class="bw"><div class="bf" data-v="₹${m.v}K" style="height:${m.v}%;background:${i===5?'linear-gradient(to top,var(--blue),var(--blue2))':'var(--s4)'}"></div><div class="bl">${m.l}</div></div>`).join('')}</div></div>`;
+  el('cat-chart').innerHTML=`<div class="ch-box"><div class="ch-t">Category Breakdown</div><div class="ch-s">This month</div><div style="margin-top:12px">${cats.map(c=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:.73rem;margin-bottom:4px"><span>${c.cat}</span><span style="color:${c.col}">${c.pct}%</span></div><div style="height:4px;background:var(--s3);border-radius:2px;overflow:hidden"><div style="width:${c.pct}%;height:100%;background:${c.col};border-radius:2px"></div></div></div>`).join('')}</div></div>`;
+}
+
+function renderPortfolio() {
+  const pc=el('portfolio-content');
+  const cards=S.cards.map(dc=>CARD_DB.find(c=>c.id===dc.cardId)).filter(Boolean);
+  if(!cards.length){pc.innerHTML='<div class="empty"><div class="empty-i">🎯</div><div class="empty-t">Add cards first</div><div class="empty-s">Add your credit cards to get portfolio optimization</div></div>';return;}
+  const recs=[
+    {ico:'🛒',cat:'Online Shopping',rec:cards.sort((a,b)=>(b.ratings?.spend?.online||0)-(a.ratings?.spend?.online||0))[0]?.name},
+    {ico:'🍔',cat:'Dining & Food',rec:cards.sort((a,b)=>(b.ratings?.spend?.dining||0)-(a.ratings?.spend?.dining||0))[0]?.name},
+    {ico:'✈️',cat:'Travel Bookings',rec:cards.sort((a,b)=>(b.ratings?.spend?.travel||0)-(a.ratings?.spend?.travel||0))[0]?.name},
+    {ico:'⛽',cat:'Fuel',rec:cards.sort((a,b)=>(b.ratings?.spend?.fuel||0)-(a.ratings?.spend?.fuel||0))[0]?.name},
+    {ico:'🌍',cat:'International / Forex',rec:cards.sort((a,b)=>(a.forex||4)-(b.forex||4))[0]?.name},
+  ];
+  pc.innerHTML=`<div class="tip"><div class="tip-i">🎯</div><div class="tip-t">Based on your ${cards.length} tracked card${cards.length!==1?'s':''}, use these cards for each spending category to maximize rewards.</div></div>
+  ${recs.map(r=>`<div class="po-item"><div class="in-h">${r.ico} ${r.cat}</div><div class="in-b"><strong>Best card:</strong> ${r.rec||'N/A'}</div></div>`).join('')}`;
+}
+
+function renderInsights() {
+  const cards=S.cards.map(dc=>CARD_DB.find(c=>c.id===dc.cardId)).filter(Boolean);
+  const ic=el('insights-content');
+  if(!cards.length){ic.innerHTML='<div class="empty"><div class="empty-i">💡</div><div class="empty-t">Add cards for insights</div><div class="empty-s">Personalized optimization tips appear here</div></div>';return;}
+  ic.innerHTML=`${cards.map(card=>`<div class="insight" style="border-left-color:${card.accentColor||'var(--blue)'}"><div class="in-h">💡 ${card.name}</div><div class="in-b">${card.redeem}</div>${(card.lounge?.spendCondition||(card.lounge?.threshold||'').includes('⚠️'))?`<div class="warn" style="margin-top:7px;padding:9px"><div class="tip-i" style="font-size:.85rem">⚠️</div><div class="tip-t" style="font-size:.72rem">${card.lounge.spendCondition||card.lounge.threshold}</div></div>`:''}</div>`).join('')}
+  <div class="tip"><div class="tip-i">📊</div><div class="tip-t">Use the <strong>Recommender</strong> tool with your monthly spending amounts to discover if there are better cards for your specific pattern.</div></div>`;
+}
+
+/* ── MODAL / CARD CRUD ── */
+function openModal(id){ el(id)?.classList.add('on'); }
+function closeModal(id){ el(id)?.classList.remove('on'); }
+function addCard() {
+  const cardId=el('m-card')?.value;
+  if(!cardId){alert('Please select a card.');return;}
+  if(S.cards.find(c=>c.cardId===cardId)){alert('Card already in dashboard.');closeModal('add-card-modal');return;}
+  S.cards.push({id:Date.now().toString(),cardId,lim:+(el('m-lim')?.value||0),bal:+(el('m-bal')?.value||0),due:+(el('m-due')?.value||15),last4:el('m-last4')?.value||'****',pts:+(el('m-pts')?.value||0)});
+  save(); closeModal('add-card-modal');
+  ['m-card','m-lim','m-bal','m-due','m-last4','m-pts'].forEach(id=>{const e=el(id);if(e)e.value='';});
+  renderDashAll(); el('dash-sub').textContent=`${S.cards.length} card${S.cards.length!==1?'s':''} tracked`;
+}
+function addBill() {
+  const cardId=el('b-card-sel')?.value, amt=el('b-amt')?.value, date=el('b-date')?.value;
+  if(!cardId||!amt||!date){alert('Please fill all fields.');return;}
+  S.bills.push({id:Date.now().toString(),cardId,amount:amt,date});
+  save(); closeModal('add-bill-modal'); renderBills(); renderDashOverview();
+}
+function removeCard(id){ if(!confirm('Remove from dashboard?'))return; S.cards=S.cards.filter(c=>c.id!==id); save(); renderDashAll(); el('dash-sub').textContent=`${S.cards.length} card${S.cards.length!==1?'s':''} tracked`; }
+function removeBill(id){ S.bills=S.bills.filter(b=>b.id!==id); save(); renderBills(); renderDashOverview(); }
+
+/* ── ADD BILL MODAL SETUP ── */
+function openAddBillSetup() {
+  const sel=el('b-card-sel');
+  if(sel){ sel.innerHTML='<option value="">— Select card —</option>'+S.cards.map(dc=>{const c=CARD_DB.find(x=>x.id===dc.cardId);return c?`<option value="${dc.cardId}">${c.name}</option>`:''}).join(''); }
+  const d=new Date(); d.setDate(28);
+  const di=el('b-date'); if(di) di.value=d.toISOString().split('T')[0];
+  openModal('add-bill-modal');
+}
+
+/* Override add bill button */
+document.querySelectorAll('[onclick*="add-bill-modal"]').forEach(b=>b.onclick=openAddBillSetup);
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', ()=>{ renderHome(); });
+</script>
+</body>
+</html>
